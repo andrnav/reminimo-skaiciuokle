@@ -26,19 +26,20 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 .hint{font-size:12px;color:var(--muted);margin:9px 0 0}
 .hidden{display:none!important}
 .center{display:grid;gap:12px;position:sticky;top:12px}
-.previewcard{padding:15px;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(145deg,#fff,#f6f3ed)}
+.previewcard{padding:18px;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#eef4f8 0,#dbe5ed 56%,#c8d5df 100%)}
 .preview-wrap{width:100%;display:flex;align-items:center;justify-content:center;min-height:480px;position:relative;padding:24px 12px}
-.frame{position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#98632e,#e0b96c 18%,#8a5926 38%,#d5aa5e 56%,#795020 78%,#d6ad67);padding:clamp(7px,1.5vw,18px);box-shadow:0 14px 26px #34251438,inset 0 0 0 2px #5f3d1d;transition:all .2s ease;max-width:100%;max-height:490px}
+.frame{position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#98632e 0%,#f2d18a 12%,#9a642b 24%,#f4d28a 39%,#8b5524 54%,#e7bd70 68%,#70451f 84%,#e4bd79 100%);padding:clamp(8px,1.5vw,19px);box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #593716,inset 0 0 0 5px #d6a45a;transition:all .2s ease;max-width:100%;max-height:490px;border-radius:2px}
 .frame.no-frame{padding:0;background:transparent;box-shadow:none}
-.mat{background:#f4efe5;padding:clamp(8px,1.8vw,24px);box-shadow:inset 0 0 0 1px #d9d0c2;display:flex;align-items:center;justify-content:center}
+.mat{background:linear-gradient(135deg,#fffdf7,#e9e0d0);padding:clamp(8px,1.8vw,24px);box-shadow:inset 0 0 0 1px #d9d0c2,0 0 0 1px #b9ad99;display:flex;align-items:center;justify-content:center}
 .frame.no-frame .mat{box-shadow:none}
-.art{background:linear-gradient(#8fc9ec 0 38%,#dbe9ef 38% 43%,#6c8e9b 43% 50%,#243e39 50% 64%,#1e5267 64% 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;min-width:80px;min-height:110px;box-shadow:0 0 0 1px #ffffffaa}
-.art:before{content:"";position:absolute;inset:28% 0 0;background:linear-gradient(135deg,transparent 0 14%,#344c4b 14% 26%,transparent 26%),linear-gradient(45deg,transparent 0 25%,#f0f3ed 25% 29%,#657d84 29% 49%,transparent 49%),linear-gradient(135deg,transparent 0 36%,#294e51 36% 52%,transparent 52%);opacity:.95}
-.art:after{content:"";position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(180deg,#376f80,#0c3e54);opacity:.8}
-.art span{position:relative;z-index:1;color:#fff;text-shadow:0 1px 4px #123;font-size:11px;background:#102b3a55;padding:5px;border-radius:4px}
+.art{background:#8fc9ec;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;min-width:80px;min-height:110px;box-shadow:0 0 0 4px #fff,0 3px 10px #14233324}
+.art svg{display:block;width:100%;height:100%;min-width:80px;min-height:110px}
 .dim{position:absolute;font-size:12px;font-weight:700;color:#182338;background:#ffffffdb;padding:3px 7px;border-radius:5px;white-space:nowrap}
 .dim.top{top:1px;left:50%;transform:translateX(-50%)}.dim.side{left:0;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center}
-.preview-note{text-align:center;color:var(--muted);font-size:12px}
+.frame.style-black{background:linear-gradient(135deg,#08090b 0%,#53565a 12%,#17191d 23%,#777a7e 34%,#111215 48%,#414348 62%,#08090b 80%,#5d6064 100%);box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #050506,inset 0 0 0 5px #777a7e}
+.frame.style-white{background:linear-gradient(135deg,#c7c9ca 0%,#fff 12%,#d7d9da 24%,#fff 39%,#c2c5c7 54%,#fdfdfd 68%,#b9bcbe 84%,#fff 100%);box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #a8abad,inset 0 0 0 5px #fff}
+.frame.style-gold{background:linear-gradient(135deg,#98632e 0%,#f2d18a 12%,#9a642b 24%,#f4d28a 39%,#8b5524 54%,#e7bd70 68%,#70451f 84%,#e4bd79 100%)}
+.frame-visual-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.visual-choice{border:1px solid #d7dee8;background:#fff;border-radius:11px;padding:10px 8px;display:flex;align-items:center;gap:9px;cursor:pointer;color:var(--ink);font:inherit;text-align:left}.visual-choice:hover{border-color:#8ab9f7;background:#f8fbff}.visual-choice.active{border:2px solid var(--blue);padding:9px 7px;background:#eff6ff}.swatch{display:block;width:31px;height:31px;border-radius:6px;flex:none;box-shadow:inset 0 0 0 1px #0002,0 2px 4px #0001}.swatch.gold{background:linear-gradient(135deg,#82501e,#f3d28b,#9b672d,#e8bd70)}.swatch.black{background:linear-gradient(135deg,#050506,#73767a,#111)}.swatch.white{background:linear-gradient(135deg,#bfc2c4,#fff,#d4d6d7)}.visual-choice strong{display:block;font-size:13px}.visual-choice small{display:block;color:var(--muted);font-size:10px}.preview-note{text-align:center;color:var(--muted);font-size:12px}
 .result-card h2{margin-bottom:10px}.result-line{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf0f4;align-items:baseline}.result-line:last-child{border-bottom:0}.result-line span{color:#475467}.result-line strong{text-align:right;font-size:15px}.total{background:#eaf8f0;border-radius:10px;padding:13px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;color:var(--green);font-weight:750;font-size:17px}.details{background:#f8fafc;border-radius:10px;padding:13px;margin-top:12px;font-size:12px;color:#4b5565}.details div{display:flex;justify-content:space-between;gap:12px;padding:4px 0}.details b{color:var(--ink);text-align:right}.reset{border:0;background:#e9edf3;color:var(--ink);border-radius:9px;padding:12px;width:100%;font:inherit;cursor:pointer}.tag{font-size:11px;background:var(--blue2);color:#175db3;padding:4px 8px;border-radius:20px}
 .dimension-fields{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}.dimension-fields .x{font-size:18px;color:var(--muted);padding-bottom:8px}
 .dimension-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:12px}.dimension-item{min-width:0}.dimension-item label{font-size:10px;margin-bottom:3px}.dimension-item strong{font-size:12px;white-space:nowrap;letter-spacing:-.3px}@media(max-width:390px){.dimension-summary{gap:4px;padding:9px 6px}.dimension-item label{font-size:9px}.dimension-item strong{font-size:10px}}
@@ -127,10 +128,24 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 <section class="center">
   <div class="card previewcard">
     <div class="preview-wrap">
-      <div class="frame" id="frameVisual"><div class="mat" id="matVisual"><div class="art" id="artVisual"><span>Rėminamas darbas</span></div></div></div>
+      <div class="frame style-gold" id="frameVisual"><div class="mat" id="matVisual"><div class="art" id="artVisual" aria-label="Kalnų ežero paveikslas">
+        <svg viewBox="0 0 300 420" role="img" aria-label="Kalnai, miškas ir ežeras" preserveAspectRatio="xMidYMid slice">
+          <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#72b7e8"/><stop offset="1" stop-color="#f7d8a2"/></linearGradient><linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#397e9b"/><stop offset="1" stop-color="#102f4d"/></linearGradient><linearGradient id="mountain" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e7e8e2"/><stop offset=".48" stop-color="#7b9eaf"/><stop offset="1" stop-color="#294a61"/></linearGradient></defs>
+          <rect width="300" height="420" fill="url(#sky)"/><g fill="#fff6df" opacity=".7"><ellipse cx="70" cy="58" rx="34" ry="8"/><ellipse cx="89" cy="52" rx="21" ry="9"/><ellipse cx="235" cy="91" rx="39" ry="8"/><ellipse cx="251" cy="85" rx="21" ry="9"/></g>
+          <path d="M0 215 58 128 92 168 151 63 218 168 252 121 300 193 300 260 0 260Z" fill="url(#mountain)"/><path d="m116 112 35-49 35 57-26-13-12 10-12-12-13 16Z" fill="#fff8e8"/><path d="m30 173 28-45 19 29-18-7-10 11Z" fill="#f5f2e9"/><path d="M0 230 47 184 82 211 126 179 171 218 215 181 258 216 300 188 300 270 0 270Z" fill="#355d58"/><path d="M0 257 58 224 98 246 147 218 201 249 254 222 300 245 300 420 0 420Z" fill="url(#lake)"/><path d="M150 226 132 300 170 300Z" fill="#e7c18b" opacity=".35"/><g stroke="#c2dce0" stroke-linecap="round" opacity=".7"><path d="M30 290h78M170 315h88M48 341h122M183 365h70M20 389h94"/><path d="M130 275h33M112 330h28M190 346h49M80 375h43"/></g><g fill="#173b37"><path d="M0 236 15 187 29 236 39 207 52 251 65 212 80 260 0 276Z"/><path d="M230 249 246 194 260 249 274 208 290 258 300 237 300 280Z"/></g><g fill="#e6c28b" opacity=".5"><path d="M145 231 155 231 162 270 148 270Z"/><path d="M151 280 160 280 172 330 145 330Z"/></g>
+        </svg>
+      </div></div>
     </div>
   </div>
-  <div class="preview-note" id="previewCaption">Peržiūra yra scheminė, ne mastelio brėžinys.</div>
+  <div class="card" style="padding:13px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><strong style="font-size:14px">Rėmo išvaizda</strong><span class="tag">Tik vizualizacija</span></div>
+    <div class="frame-visual-options" id="frameVisualOptions">
+      <button class="visual-choice active" type="button" data-style="gold" aria-pressed="true"><span class="swatch gold"></span><span><strong>Auksinis</strong><small>Šiltas, klasikinis</small></span></button>
+      <button class="visual-choice" type="button" data-style="black" aria-pressed="false"><span class="swatch black"></span><span><strong>Juodas</strong><small>Modernus, ryškus</small></span></button>
+      <button class="visual-choice" type="button" data-style="white" aria-pressed="false"><span class="swatch white"></span><span><strong>Baltas</strong><small>Šviesus, subtilus</small></span></button>
+    </div>
+  </div>
+  <div class="preview-note" id="previewCaption">Rėmo spalvos pasirinkimas keičia tik peržiūrą, ne skaičiavimus.</div>
   <div class="card dimension-summary">
     <div class="dimension-item"><label>Darbo matmenys</label><strong id="summaryArt">40 × 60 cm</strong></div>
     <div class="dimension-item"><label>Vidiniai matmenys</label><strong id="summaryInner">48 × 66 cm</strong></div>
@@ -144,15 +159,15 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
     <div class="result-line"><span>Darbo matmenys</span><strong id="rArt">40 × 60 cm</strong></div>
     <div class="result-line"><span>Vidiniai matmenys</span><strong id="rInner">48 × 66 cm</strong></div>
     <div class="result-line"><span>Išoriniai matmenys</span><strong id="rOuter">52 × 70 cm</strong></div>
-    <div class="result-line"><span>Reikalingas bageto ilgis</span><strong id="rLength">2,44 m</strong></div>
-    <div class="result-line"><span>Reikalingų lazdų kiekis</span><strong id="rSticks">1 vnt.</strong></div>
+    <div class="result-line" id="rLengthRow"><span>Reikalingas bageto ilgis</span><strong id="rLength">2,44 m</strong></div>
+    <div class="result-line" id="rSticksRow"><span>Reikalingų lazdų kiekis</span><strong id="rSticks">1 vnt.</strong></div>
   </div>
   <div class="card result-card">
     <h2>Kainos</h2>
-    <div class="result-line"><span>Paklijavimas ant pagrindo</span><strong id="rBackingCost">Išjungtas</strong></div>
-    <div class="result-line"><span>Pasportas</span><strong id="rMatCost">4,95 €</strong></div>
-    <div class="result-line"><span>Bagetas</span><strong id="rFrameCost">61,00 €</strong></div>
-    <div class="result-line"><span id="glassLabel">Stiklas (skaidrus)</span><strong id="rGlassCost">6,34 €</strong></div>
+    <div class="result-line" id="backingCostRow"><span>Paklijavimas ant pagrindo</span><strong id="rBackingCost">Išjungtas</strong></div>
+    <div class="result-line" id="matCostRow"><span>Pasportas</span><strong id="rMatCost">4,95 €</strong></div>
+    <div class="result-line" id="frameCostRow"><span>Bagetas</span><strong id="rFrameCost">61,00 €</strong></div>
+    <div class="result-line" id="glassCostRow"><span id="glassLabel">Stiklas (skaidrus)</span><strong id="rGlassCost">6,34 €</strong></div>
     <div class="total"><span>Bendra medžiagų kaina</span><strong id="rTotal">72,29 €</strong></div>
     <p class="hint">Preliminari medžiagų savikaina pagal įvestas kainas. Darbas, atliekos ir kitos išlaidos neįtrauktos.</p>
   </div>
@@ -164,7 +179,8 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 </main>
 <script>
 const $=id=>document.getElementById(id);
-let orientation='portrait',frameMode='width';
+let orientation='portrait',frameMode='width',visualFrameStyle='gold';
+$('frameVisualOptions').addEventListener('click',e=>{const b=e.target.closest('button[data-style]');if(!b)return;visualFrameStyle=b.dataset.style;$('frameVisual').classList.remove('style-gold','style-black','style-white');$('frameVisual').classList.add(`style-${visualFrameStyle}`);$('frameVisualOptions').querySelectorAll('button').forEach(x=>{const active=x===b;x.classList.toggle('active',active);x.setAttribute('aria-pressed',String(active));});});
 const num=id=>Math.max(0,Number($(id).value)||0);
 const fmt=(n,d=2)=>n.toLocaleString('lt-LT',{minimumFractionDigits:d,maximumFractionDigits:d});
 const cm=n=>`${fmt(n,n%1===0?0:1)} cm`;
@@ -203,12 +219,13 @@ function update(){
  const frameCost=lengthM*num('framePrice');
  const glassCost=glassArea*num('glassPrice');
  const total=matCost+backingCost+frameCost+glassCost;
- $('rArt').textContent=size(aw,ah);$('rInner').textContent=size(innerW,innerH);$('rOuter').textContent=frameOn?size(outerW,outerH):size(innerW,innerH);
+ $('rArt').textContent=size(aw,ah);$('rInner').textContent=size(innerW,innerH);$('rOuter').textContent=frameOn?size(outerW,outerH):size(innerW,innerH);$('rLengthRow').classList.toggle('hidden',!frameOn);$('rSticksRow').classList.toggle('hidden',!frameOn);
  $('rLength').textContent=frameOn?`${fmt(lengthM)} m`:'Netaikoma';$('rSticks').textContent=frameOn?`${sticks} vnt.`:'0 vnt.';
- $('rBackingCost').textContent=backingOn?`${euro(backingCost)} (${backingLabel})`:'Išjungtas';
- $('rMatCost').textContent=matOn?euro(matCost):'Išjungtas';$('rFrameCost').textContent=frameOn?euro(frameCost):'Išjungtas';
- $('glassLabel').textContent=glassOn?`Stiklas (${gType==='clear'?'skaidrus':'matinis'})`:'Stiklas';
- $('rGlassCost').textContent=glassOn?euro(glassCost):'Nereikia';$('rTotal').textContent=euro(total);
+ $('backingCostRow').classList.toggle('hidden',!backingOn);$('matCostRow').classList.toggle('hidden',!matOn);$('frameCostRow').classList.toggle('hidden',!frameOn);$('glassCostRow').classList.toggle('hidden',!glassOn);
+ $('rBackingCost').textContent=`${euro(backingCost)} (${backingLabel})`;
+ $('rMatCost').textContent=euro(matCost);$('rFrameCost').textContent=euro(frameCost);
+ $('glassLabel').textContent=`Stiklas (${gType==='clear'?'skaidrus':'matinis'})`;
+ $('rGlassCost').textContent=euro(glassCost);$('rTotal').textContent=euro(total);
  $('summaryArt').textContent=size(aw,ah);$('summaryInner').textContent=size(innerW,innerH);$('summaryOuter').textContent=frameOn?size(outerW,outerH):size(innerW,innerH);
  $('previewCaption').textContent=`Darbas ${orientation==='portrait'?'vertikalus':'horizontalus'} • peržiūra scheminė, ne tikslaus mastelio`;
  let w=aw,h=ah;if(orientation==='landscape'&&w<h){[w,h]=[h,w]}if(orientation==='portrait'&&w>h){[w,h]=[h,w]}
@@ -223,19 +240,13 @@ function update(){
  matVisual.style.paddingLeft=matOn?`${Math.max(8,Math.min(55,ml*5))}px`:'0';
  matVisual.style.paddingRight=matOn?`${Math.max(8,Math.min(55,mr*5))}px`:'0';
  frameVisual.style.maxWidth='100%';frameVisual.style.maxHeight='490px';
- $('details').innerHTML=`
- <div><span>Darbo matmenys</span><b>${size(aw,ah)}</b></div>
- <div><span>Pasporto kraštinės</span><b>${matOn?`Viršus ${fmt(mt)} / Kairė ${fmt(ml)} / Dešinė ${fmt(mr)} / Apačia ${fmt(mb)} cm`:'Nenaudojamas'}</b></div>
- <div><span>Vidiniai matmenys</span><b>${size(innerW,innerH)}</b></div>
- <div><span>Išoriniai matmenys</span><b>${frameOn?size(outerW,outerH):'Bagetas išjungtas'}</b></div>
- <div><span>Bageto skaičiavimo būdas</span><b>${!frameOn?'Išjungtas':frameMode==='width'?`Plotis ${fmt(fw)} cm`:`Kampų priedas ${fmt(cornerAdd)} m`}</b></div>
- <div><span>Reikalingas bageto ilgis</span><b>${fmt(lengthM)} m</b></div>
- <div><span>Bageto lazdos</span><b>${frameOn?`${sticks} × ${fmt(stickLen)} m`:'Netaikoma'}</b></div>
- <div><span>Pagrindas</span><b>${backingLabel}</b></div>
- <div><span>Pagrindo kaina</span><b>${backingOn?euro(backingCost):'Išjungtas'}</b></div>
- <div><span>Pasporto kaina</span><b>${matOn?euro(matCost):'Išjungtas'}</b></div>
- <div><span>Stiklo tipas</span><b>${gType==='none'?'Nereikia':gType==='clear'?'Skaidrus':'Matinis'}</b></div>
- <div><span>Stiklo kaina</span><b>${glassOn?euro(glassCost):'Nereikia'}</b></div>`;
+ const detailRows=[];
+ detailRows.push(`<div><span>Darbo matmenys</span><b>${size(aw,ah)}</b></div>`);
+ if(backingOn) detailRows.push(`<div><span>${backingLabel}</span><b>${fmt(backingArea,4)} m² × ${euro(num('backingPrice'))} = ${euro(backingCost)}</b></div>`);
+ if(matOn) detailRows.push(`<div><span>Pasportas (${size(innerW,innerH)})</span><b>${fmt(matArea,4)} m² × ${euro(num('matPrice'))} = ${euro(matCost)}</b></div>`);
+ if(frameOn) detailRows.push(`<div><span>Bagetas (${frameMode==='width'?`plotis ${fmt(fw)} cm`:'pagal kampų sumą'})</span><b>${fmt(lengthM)} m × ${euro(num('framePrice'))} = ${euro(frameCost)}</b></div><div><span>Reikalingos lazdos</span><b>${sticks} vnt. po ${fmt(stickLen)} m</b></div>`);
+ if(glassOn) detailRows.push(`<div><span>Stiklas (${gType==='clear'?'skaidrus':'matinis'})</span><b>${fmt(glassArea,4)} m² × ${euro(num('glassPrice'))} = ${euro(glassCost)}</b></div>`);
+ $('details').innerHTML=detailRows.length>1?detailRows.join(''):'<div><span>Nėra įjungtų medžiagų</span><b>0,00 €</b></div>';
 }
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',update));
 $('reset').addEventListener('click',()=>{
@@ -243,7 +254,7 @@ $('reset').addEventListener('click',()=>{
  $('backingOn').checked=false;$('backingType').value='cardboard';document.querySelector('input[name="backingColor"][value="black"]').checked=true;$('backingPrice').value=10;
  $('frameOn').checked=true;$('frameWidth').value=2;$('cornerAdd').value=.16;$('framePrice').value=25;$('stickLength').value=3;
  document.querySelector('input[name="glassType"][value="clear"]').checked=true;$('glassPrice').value=20;
- orientation='portrait';frameMode='width';setSegment('orientation',orientation);setSegment('frameMode',frameMode);$('cornerField').classList.add('hidden');update()
+ orientation='portrait';frameMode='width';visualFrameStyle='gold';$('frameVisual').classList.remove('style-black','style-white');$('frameVisual').classList.add('style-gold');$('frameVisualOptions').querySelectorAll('button').forEach(b=>{const active=b.dataset.style==='gold';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});setSegment('orientation',orientation);setSegment('frameMode',frameMode);$('cornerField').classList.add('hidden');update()
 });
 update();
 </script>
