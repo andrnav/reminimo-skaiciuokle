@@ -1,19 +1,17 @@
 # Rėminimo skaičiuoklė
 
-Atnaujinta svetainė su trijų stulpelių dizainu, matmenų rodyklėmis, auksiniu rėmu, ryškiu pasportu ir mėlynu fonu.
+Vieno `index.html` failo rėminimo skaičiuoklė su trijų stulpelių išdėstymu, centrine paveikslo peržiūra ir medžiagų kainos skaičiavimu.
 
 ## Funkcijos
-- Darbo matmenys, orientacija, pasportas, bagetas, stiklas ir pasirenkamas paklijavimas ant pagrindo.
-- Pagrindo tipas pasirenkamas burbuliukais; klijingai putai ir PVC galima rinktis juodą arba baltą spalvą.
-- Pagrindo plotas skaičiavimo detalėse rodomas cm².
-- Penki skirtingi SVG piešiniai įterpti tiesiai į HTML. Kiekvieną kartą atidarius puslapį atsitiktinai pasirenkamas vienas.
-- Formos reikšmės automatiškai saugomos naršyklės `localStorage`; išsaugomos net uždarius langą. Duomenys yra konkrečioje naršyklėje ir įrenginyje.
-- Mygtukas „Išsaugoti“ leidžia išsaugoti iškart, „Išvalyti viską“ atstato pradines reikšmes.
+- Darbo matmenys ir orientacija, pasportas, bagetas, stiklas ir pasirenkamas paklijavimas ant pagrindo.
+- Centrinėje peržiūroje galima pasirinkti auksinio, juodo arba balto rėmo išvaizdą. Tai tik vizualus pasirinkimas: jis nekeičia skaičiavimo ir kainos.
+- Paveikslo iliustracija įterpta tiesiai į HTML, todėl papildomų paveikslėlių failų nereikia.
+- Kainų skiltyje ir skaičiavimo detalėse rodomos tik įjungtos bei kainą sudarančios medžiagos. Išjungus bagetą paslepiamas ir jo ilgis bei lazdų kiekis.
+- Skaičiavimo detalėse matoma aktyvių medžiagų formulė ir suma.
+- Visa svetainė veikia viename `index.html` faile, be papildomų bibliotekų ar serverio.
 
 ## Įkėlimas į GitHub Pages
-1. Išskleisk ZIP.
-2. Pakeisk seną `index.html` nauju failu GitHub saugykloje.
+1. Išskleisk ZIP archyvą.
+2. Pakeisk seną `index.html` failą GitHub saugykloje nauju.
 3. Paspausk **Commit changes**.
 4. Palauk, kol GitHub Pages paskelbs atnaujinimą, tada naršyklėje atlik `Ctrl + F5`.
-
-Visa svetainė yra viename `index.html` faile, papildomų bibliotekų ar paveikslėlių failų nereikia.
