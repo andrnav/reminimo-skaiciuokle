@@ -24,6 +24,14 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 .segment button{flex:1;border:0;background:transparent;padding:8px 5px;border-radius:7px;color:var(--ink);cursor:pointer;font:inherit;font-size:13px}
 .segment button.active{background:var(--blue);color:white;box-shadow:0 2px 5px #0001}
 .hint{font-size:12px;color:var(--muted);margin:9px 0 0}
+.backing-type-bubbles{display:flex;flex-wrap:wrap;gap:9px;margin-top:7px}
+.backing-bubble{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--line,#d7e0ea);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer;font:inherit;font-size:13px;transition:border-color .15s,background .15s,box-shadow .15s}
+.backing-bubble:hover{border-color:var(--blue)}
+.backing-bubble.active{border-color:var(--blue);background:#eaf3ff;box-shadow:0 0 0 2px #267cf018;color:var(--blue);font-weight:600}
+.bubble-dot{width:13px;height:13px;border:2px solid #9aa9bb;border-radius:50%;display:inline-block;position:relative;flex:none}
+.backing-bubble.active .bubble-dot{border-color:var(--blue)}
+.backing-bubble.active .bubble-dot:after{content:"";position:absolute;inset:3px;background:var(--blue);border-radius:50%}
+
 .hidden{display:none!important}
 .center{display:grid;gap:12px;position:sticky;top:12px}
 .previewcard{padding:18px;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#eef4f8 0,#dbe5ed 56%,#c8d5df 100%)}
@@ -71,12 +79,17 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
   <div class="card">
     <div class="toggleline"><h2>2. Darbo paklijavimas ant pagrindo</h2><input class="switch" id="backingOn" type="checkbox" aria-label="Įjungti paklijavimą ant pagrindo"></div>
     <div id="backingFields" class="hidden">
-      <div class="field"><label for="backingType">Pagrindo tipas</label>
-        <select id="backingType">
+      <div class="field"><label>Pagrindo tipas</label>
+        <select id="backingType" class="hidden" aria-hidden="true" tabindex="-1">
           <option value="cardboard">Kartonas</option>
           <option value="foam">Klijinga puta</option>
           <option value="pvc">PVC</option>
         </select>
+        <div class="backing-type-bubbles" id="backingTypeBubbles" role="group" aria-label="Pagrindo tipas">
+          <button type="button" class="backing-bubble active" data-value="cardboard" aria-pressed="true"><span class="bubble-dot"></span><span>Kartonas</span></button>
+          <button type="button" class="backing-bubble" data-value="foam" aria-pressed="false"><span class="bubble-dot"></span><span>Klijinga puta</span></button>
+          <button type="button" class="backing-bubble" data-value="pvc" aria-pressed="false"><span class="bubble-dot"></span><span>PVC</span></button>
+        </div>
       </div>
       <div id="backingColorField" class="hidden" style="margin-top:12px">
         <label>Spalva</label>
@@ -126,6 +139,14 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 </section>
 
 <section class="center">
+  <div class="card" style="padding:13px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><strong style="font-size:14px">Rėmo išvaizda</strong><span class="tag">Tik vizualizacija</span></div>
+    <div class="frame-visual-options" id="frameVisualOptions">
+      <button class="visual-choice active" type="button" data-style="gold" aria-pressed="true"><span class="swatch gold"></span><span><strong>Auksinis</strong><small>Šiltas, klasikinis</small></span></button>
+      <button class="visual-choice" type="button" data-style="black" aria-pressed="false"><span class="swatch black"></span><span><strong>Juodas</strong><small>Modernus, ryškus</small></span></button>
+      <button class="visual-choice" type="button" data-style="white" aria-pressed="false"><span class="swatch white"></span><span><strong>Baltas</strong><small>Šviesus, subtilus</small></span></button>
+    </div>
+  </div>
   <div class="card previewcard">
     <div class="preview-wrap">
       <div class="frame style-gold" id="frameVisual"><div class="mat" id="matVisual"><div class="art" id="artVisual" aria-label="Kalnų ežero paveikslas">
@@ -137,14 +158,6 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
       </div></div>
     </div>
   </div>
-  </div>
-  <div class="card" style="padding:13px">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><strong style="font-size:14px">Rėmo išvaizda</strong><span class="tag">Tik vizualizacija</span></div>
-    <div class="frame-visual-options" id="frameVisualOptions">
-      <button class="visual-choice active" type="button" data-style="gold" aria-pressed="true"><span class="swatch gold"></span><span><strong>Auksinis</strong><small>Šiltas, klasikinis</small></span></button>
-      <button class="visual-choice" type="button" data-style="black" aria-pressed="false"><span class="swatch black"></span><span><strong>Juodas</strong><small>Modernus, ryškus</small></span></button>
-      <button class="visual-choice" type="button" data-style="white" aria-pressed="false"><span class="swatch white"></span><span><strong>Baltas</strong><small>Šviesus, subtilus</small></span></button>
-    </div>
   </div>
   <div class="preview-note" id="previewCaption">Rėmo spalvos pasirinkimas keičia tik peržiūrą, ne skaičiavimus.</div>
   <div class="card dimension-summary">
@@ -193,6 +206,8 @@ $('orientation').addEventListener('click',e=>{const b=e.target.closest('button')
 $('frameMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;frameMode=b.dataset.value;setSegment('frameMode',frameMode);$('cornerField').classList.toggle('hidden',frameMode!=='corners');update()});
 $('backingOn').addEventListener('change',update);
 $('backingType').addEventListener('change',update);
+$('backingTypeBubbles').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;$('backingType').value=b.dataset.value;$('backingTypeBubbles').querySelectorAll('button').forEach(x=>{const active=x===b;x.classList.toggle('active',active);x.setAttribute('aria-pressed',String(active));});update();});
+
 function update(){
  const aw=Math.max(.1,num('artW')),ah=Math.max(.1,num('artH'));
  const backingOn=$('backingOn').checked, backingType=$('backingType').value;
@@ -252,7 +267,7 @@ function update(){
 document.querySelectorAll('input').forEach(el=>el.addEventListener('input',update));
 $('reset').addEventListener('click',()=>{
  $('artW').value=40;$('artH').value=60;$('matOn').checked=true;$('matTop').value=4;$('matBottom').value=2;$('matLeft').value=4;$('matRight').value=4;$('matPrice').value=15;
- $('backingOn').checked=false;$('backingType').value='cardboard';document.querySelector('input[name="backingColor"][value="black"]').checked=true;$('backingPrice').value=10;
+ $('backingOn').checked=false;$('backingType').value='cardboard';$('backingTypeBubbles').querySelectorAll('button').forEach(b=>{const active=b.dataset.value==='cardboard';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});document.querySelector('input[name="backingColor"][value="black"]').checked=true;$('backingPrice').value=10;
  $('frameOn').checked=true;$('frameWidth').value=2;$('cornerAdd').value=.16;$('framePrice').value=25;$('stickLength').value=3;
  document.querySelector('input[name="glassType"][value="clear"]').checked=true;$('glassPrice').value=20;
  orientation='portrait';frameMode='width';visualFrameStyle='gold';$('frameVisual').classList.remove('style-black','style-white');$('frameVisual').classList.add('style-gold');$('frameVisualOptions').querySelectorAll('button').forEach(b=>{const active=b.dataset.style==='gold';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});setSegment('orientation',orientation);setSegment('frameMode',frameMode);$('cornerField').classList.add('hidden');update()
