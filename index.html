@@ -40,8 +40,16 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 .dim.top{top:1px;left:50%;transform:translateX(-50%)}.dim.side{left:0;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center}
 .preview-note{text-align:center;color:var(--muted);font-size:12px}
 .result-card h2{margin-bottom:10px}.result-line{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf0f4;align-items:baseline}.result-line:last-child{border-bottom:0}.result-line span{color:#475467}.result-line strong{text-align:right;font-size:15px}.total{background:#eaf8f0;border-radius:10px;padding:13px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;color:var(--green);font-weight:750;font-size:17px}.details{background:#f8fafc;border-radius:10px;padding:13px;margin-top:12px;font-size:12px;color:#4b5565}.details div{display:flex;justify-content:space-between;gap:12px;padding:4px 0}.details b{color:var(--ink);text-align:right}.reset{border:0;background:#e9edf3;color:var(--ink);border-radius:9px;padding:12px;width:100%;font:inherit;cursor:pointer}.tag{font-size:11px;background:var(--blue2);color:#175db3;padding:4px 8px;border-radius:20px}
+.dimension-fields{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}.dimension-fields .x{font-size:18px;color:var(--muted);padding-bottom:8px}
+.mat-layout{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;align-items:center}
+.mat-layout .topside{grid-column:2;grid-row:1}.mat-layout .leftside{grid-column:1;grid-row:2}.mat-layout .rightside{grid-column:3;grid-row:2}.mat-layout .bottomside{grid-column:2;grid-row:3}
+.mat-layout .field input{text-align:center;padding:9px 6px}
+.radio-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.radio-option{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #ccd5e1;border-radius:9px;padding:10px 5px;cursor:pointer;font-size:13px;margin:0;color:var(--ink);background:#fff}
+.radio-option:has(input:checked){border-color:var(--blue);background:var(--blue2);color:#175db3;font-weight:650}
+.radio-option input{width:auto;margin:0;accent-color:var(--blue)}
 @media(max-width:1100px){main{grid-template-columns:minmax(270px,1fr) minmax(300px,1fr)}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.right .card{margin:0}.center{position:static}}
-@media(max-width:720px){header{padding:16px;align-items:flex-start}main{display:flex;flex-direction:column;padding:12px}.controls,.center,.right{width:100%}.center{order:2}.right{order:3;display:flex;flex-direction:column}.previewcard{min-height:400px}.preview-wrap{min-height:360px}.frame{max-height:350px}.row.three{grid-template-columns:1fr 1fr}.card{padding:14px}}
+@media(max-width:720px){header{padding:16px;align-items:flex-start}main{display:flex;flex-direction:column;padding:12px}.controls,.center,.right{width:100%}.center{order:2}.right{order:3;display:flex;flex-direction:column}.previewcard{min-height:400px}.preview-wrap{min-height:360px}.frame{max-height:350px}.row.three{grid-template-columns:1fr 1fr}.card{padding:14px}.radio-options{gap:4px}.radio-option{font-size:12px;padding:9px 2px}}
 </style>
 </head>
 <body>
@@ -49,65 +57,64 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 <main>
 <section class="controls">
   <div class="card">
-    <h2>1. Rėminamo darbo dydis</h2>
-    <div class="row">
+    <h2>1. Rėminamas darbas</h2>
+    <div class="dimension-fields">
       <div class="field"><label for="artW">Plotis (cm)</label><input id="artW" type="number" min="1" step="0.1" value="40"></div>
-      <div class="field"><label for="artH">Aukštis (cm)</label><input id="artH" type="number" min="1" step="0.1" value="60"></div>
+      <div class="x">×</div>
+      <div class="field"><label for="artH">Ilgis (cm)</label><input id="artH" type="number" min="1" step="0.1" value="60"></div>
     </div>
     <label style="margin-top:12px">Orientacija</label>
     <div class="segment" id="orientation"><button type="button" data-value="portrait" class="active">▯ Vertikalus</button><button type="button" data-value="landscape">▭ Horizontalus</button></div>
-    <p class="hint">Pasirinkimas pakeičia peržiūros orientaciją, matmenys lieka įvesti tokie, kokius nurodėte.</p>
   </div>
   <div class="card">
     <div class="toggleline"><h2>2. Pasportas</h2><input class="switch" id="matOn" type="checkbox" checked aria-label="Įjungti pasportą"></div>
     <div id="matFields">
-      <div class="row">
-        <div class="field"><label for="matTop">Viršus (cm)</label><input id="matTop" type="number" min="0" step="0.1" value="4"></div>
-        <div class="field"><label for="matBottom">Apačia (cm)</label><input id="matBottom" type="number" min="0" step="0.1" value="2"></div>
-        <div class="field"><label for="matLeft">Kairė (cm)</label><input id="matLeft" type="number" min="0" step="0.1" value="4"></div>
-        <div class="field"><label for="matRight">Dešinė (cm)</label><input id="matRight" type="number" min="0" step="0.1" value="4"></div>
-        <div class="field" style="grid-column:1/-1"><label for="matPrice">Pasporto kaina (€/m²)</label><input id="matPrice" type="number" min="0" step="0.01" value="15"></div>
+      <div class="mat-layout">
+        <div class="field topside"><label for="matTop">Viršus (cm)</label><input id="matTop" type="number" min="0" step="0.1" value="4"></div>
+        <div class="field leftside"><label for="matLeft">Kairė (cm)</label><input id="matLeft" type="number" min="0" step="0.1" value="4"></div>
+        <div class="field rightside"><label for="matRight">Dešinė (cm)</label><input id="matRight" type="number" min="0" step="0.1" value="4"></div>
+        <div class="field bottomside"><label for="matBottom">Apačia (cm)</label><input id="matBottom" type="number" min="0" step="0.1" value="2"></div>
       </div>
+      <div class="field" style="margin-top:12px"><label for="matPrice">Pasporto kaina (€/m²)</label><input id="matPrice" type="number" min="0" step="0.01" value="15"></div>
     </div>
-    <p class="hint">Pasporto kaina skaičiuojama pagal visą pasporto ruošinio plotą, t. y. išorinį plotį × išorinį aukštį.</p>
+    <p class="hint">Kaina skaičiuojama pagal pasporto ruošinio dydį.</p>
   </div>
   <div class="card">
     <div class="toggleline"><h2>3. Bagetas</h2><input class="switch" id="frameOn" type="checkbox" checked aria-label="Įjungti bagetą"></div>
     <div id="frameFields">
-      <div class="segment" id="frameMode"><button type="button" data-value="width" class="active">Bageto plotis (cm)</button><button type="button" data-value="corners">Kampų suma (m)</button></div>
-      <div class="field" id="frameWidthField"><label for="frameWidth">Bageto plotis (cm)</label><input id="frameWidth" type="number" min="0" step="0.1" value="2"></div>
-      <div class="field hidden" id="cornerField"><label for="cornerAdd">Kampų suma (m)</label><input id="cornerAdd" type="number" min="0" step="0.01" value="0.16"><p class="hint">Įveskite bendrą papildomą ilgį kampams metrais, pvz. 0,16.</p></div>
+      <div class="segment" id="frameMode"><button type="button" data-value="width" class="active">Skaičiuoti pagal plotį</button><button type="button" data-value="corners">Pagal kampų sumą</button></div>
+      <div class="field"><label for="frameWidth">Bageto plotis (cm)</label><input id="frameWidth" type="number" min="0" step="0.1" value="2"></div>
+      <div class="field hidden" id="cornerField" style="margin-top:10px"><label for="cornerAdd">Papildomas kampų ilgis (m)</label><input id="cornerAdd" type="number" min="0" step="0.01" value="0.16"></div>
       <div class="field" style="margin-top:10px"><label for="framePrice">Bageto kaina (€/m)</label><input id="framePrice" type="number" min="0" step="0.01" value="25"></div>
+      <div class="field" style="margin-top:10px"><label for="stickLength">Vienos bageto lazdos ilgis (m)</label><input id="stickLength" type="number" min="0.1" step="0.1" value="3"></div>
+      <p class="hint">Numatytasis lazdos ilgis – 3 m. Reikalingų lazdų kiekis apvalinamas į didesnę pusę.</p>
     </div>
   </div>
   <div class="card">
-    <div class="toggleline"><h2>4. Stiklas</h2><input class="switch" id="glassOn" type="checkbox" checked aria-label="Įjungti stiklą"></div>
-    <div id="glassFields">
-      <div class="field"><label for="glassType">Stiklo tipas</label><select id="glassType"><option value="clear">Skaidrus</option><option value="matte">Matinis</option></select></div>
-      <div class="field" style="margin-top:10px"><label for="glassPrice">Stiklo kaina (€/m²)</label><input id="glassPrice" type="number" min="0" step="0.01" value="20"></div>
-      <p class="hint">Stiklo plotas skaičiuojamas pagal darbo dydį su pasportu, jei pasportas įjungtas.</p>
+    <h2>4. Stiklas</h2>
+    <div class="radio-options" id="glassOptions">
+      <label class="radio-option"><input type="radio" name="glassType" value="none"> Nereikia</label>
+      <label class="radio-option"><input type="radio" name="glassType" value="clear" checked> Skaidrus</label>
+      <label class="radio-option"><input type="radio" name="glassType" value="matte"> Matinis</label>
     </div>
+    <div class="field" id="glassPriceField"><label for="glassPrice">Stiklo kaina (€/m²)</label><input id="glassPrice" type="number" min="0" step="0.01" value="20"></div>
   </div>
-  <div class="card">
-    <h2>5. Lazdos ilgis</h2>
-    <div class="field"><label for="stickLength">Vienos bageto lazdos ilgis (m)</label><input id="stickLength" type="number" min="0.1" step="0.1" value="3"></div>
-    <p class="hint">Reikalingų lazdų kiekis apvalinamas į didesnę pusę.</p>
-  </div>
-  <button class="reset" id="reset">↻ Išvalyti ir atstatyti pradines reikšmes</button>
+  <button class="reset" id="reset">↻ Atstatyti pradines reikšmes</button>
 </section>
 
 <section class="center">
   <div class="card previewcard">
     <div class="preview-wrap">
-      <div class="dim top" id="previewW">48 cm</div><div class="dim side" id="previewH">68 cm</div>
+      <div class="dim top" id="previewW">52 cm</div><div class="dim side" id="previewH">72 cm</div>
       <div class="frame" id="frameVisual"><div class="mat" id="matVisual"><div class="art" id="artVisual"><span>Rėminamas darbas</span></div></div></div>
     </div>
   </div>
   <div class="preview-note" id="previewCaption">Peržiūra yra scheminė, ne mastelio brėžinys.</div>
   <div class="card">
     <div class="row">
-      <div><label>Darbas</label><strong id="summaryArt">40 × 60 cm</strong></div>
-      <div><label>Su pasportu</label><strong id="summaryMat">48 × 68 cm</strong></div>
+      <div><label>Darbo matmenys</label><strong id="summaryArt">40 × 60 cm</strong></div>
+      <div><label>Vidiniai matmenys</label><strong id="summaryInner">48 × 66 cm</strong></div>
+      <div style="grid-column:1/-1;margin-top:6px"><label>Išoriniai matmenys</label><strong id="summaryOuter">52 × 70 cm</strong></div>
     </div>
   </div>
 </section>
@@ -115,18 +122,18 @@ input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
 <section class="right">
   <div class="card result-card">
     <h2>Rezultatai</h2>
-    <div class="result-line"><span>Rėminamo darbo dydis</span><strong id="rArt">40 × 60 cm</strong></div>
-    <div class="result-line"><span>Su pasportu</span><strong id="rMat">48 × 68 cm</strong></div>
-    <div class="result-line"><span>Galutinis dydis su bagetu</span><strong id="rFinal">52 × 72 cm</strong></div>
-    <div class="result-line"><span>Reikalingas bageto ilgis</span><strong id="rLength">2,48 m</strong></div>
+    <div class="result-line"><span>Darbo matmenys</span><strong id="rArt">40 × 60 cm</strong></div>
+    <div class="result-line"><span>Vidiniai matmenys</span><strong id="rInner">48 × 66 cm</strong></div>
+    <div class="result-line"><span>Išoriniai matmenys</span><strong id="rOuter">52 × 70 cm</strong></div>
+    <div class="result-line"><span>Reikalingas bageto ilgis</span><strong id="rLength">2,44 m</strong></div>
     <div class="result-line"><span>Reikalingų lazdų kiekis</span><strong id="rSticks">1 vnt.</strong></div>
   </div>
   <div class="card result-card">
     <h2>Kainos</h2>
-    <div class="result-line"><span>Pasportas</span><strong id="rMatCost">4,90 €</strong></div>
-    <div class="result-line"><span>Bagetas</span><strong id="rFrameCost">62,00 €</strong></div>
-    <div class="result-line"><span id="glassLabel">Stiklas (skaidrus)</span><strong id="rGlassCost">6,53 €</strong></div>
-    <div class="total"><span>Bendra medžiagų kaina</span><strong id="rTotal">73,43 €</strong></div>
+    <div class="result-line"><span>Pasportas</span><strong id="rMatCost">4,95 €</strong></div>
+    <div class="result-line"><span>Bagetas</span><strong id="rFrameCost">61,00 €</strong></div>
+    <div class="result-line"><span id="glassLabel">Stiklas (skaidrus)</span><strong id="rGlassCost">6,34 €</strong></div>
+    <div class="total"><span>Bendra medžiagų kaina</span><strong id="rTotal">72,29 €</strong></div>
     <p class="hint">Preliminari medžiagų savikaina pagal įvestas kainas. Darbas, atliekos ir kitos išlaidos neįtrauktos.</p>
   </div>
   <div class="card">
@@ -140,72 +147,71 @@ const $=id=>document.getElementById(id);
 let orientation='portrait',frameMode='width';
 const num=id=>Math.max(0,Number($(id).value)||0);
 const fmt=(n,d=2)=>n.toLocaleString('lt-LT',{minimumFractionDigits:d,maximumFractionDigits:d});
-const cm=(n)=>`${fmt(n, n%1===0?0:1)} cm`;
+const cm=n=>`${fmt(n,n%1===0?0:1)} cm`;
 const size=(w,h)=>`${fmt(w,w%1===0?0:1)} × ${fmt(h,h%1===0?0:1)} cm`;
 const euro=n=>`${fmt(n)} €`;
-function setSegment(id,attr,value){$(id).querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.value===value));}
-$('orientation').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;orientation=b.dataset.value;setSegment('orientation','data-value',orientation);update()});
-$('frameMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;frameMode=b.dataset.value;setSegment('frameMode','data-value',frameMode);$('frameWidthField').classList.toggle('hidden',frameMode!=='width');$('cornerField').classList.toggle('hidden',frameMode!=='corners');update()});
+const glassType=()=>document.querySelector('input[name="glassType"]:checked').value;
+function setSegment(id,value){$(id).querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.value===value));}
+$('orientation').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;orientation=b.dataset.value;setSegment('orientation',orientation);update()});
+$('frameMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;frameMode=b.dataset.value;setSegment('frameMode',frameMode);$('cornerField').classList.toggle('hidden',frameMode!=='corners');update()});
 function update(){
  const aw=Math.max(.1,num('artW')),ah=Math.max(.1,num('artH'));
- const matOn=$('matOn').checked,frameOn=$('frameOn').checked,glassOn=$('glassOn').checked;
- $('matFields').classList.toggle('hidden',!matOn);$('frameFields').classList.toggle('hidden',!frameOn);$('glassFields').classList.toggle('hidden',!glassOn);
+ const matOn=$('matOn').checked,frameOn=$('frameOn').checked,gType=glassType(),glassOn=gType!=='none';
+ $('matFields').classList.toggle('hidden',!matOn);$('frameFields').classList.toggle('hidden',!frameOn);$('glassPriceField').classList.toggle('hidden',!glassOn);
  const mt=matOn?num('matTop'):0,mb=matOn?num('matBottom'):0,ml=matOn?num('matLeft'):0,mr=matOn?num('matRight'):0;
- const cw=aw+ml+mr,ch=ah+mt+mb;
- const fw=frameOn&&frameMode==='width'?num('frameWidth'):0;
+ const innerW=aw+ml+mr,innerH=ah+mt+mb;
+ const fw=frameOn?num('frameWidth'):0;
+ const outerW=innerW+2*fw,outerH=innerH+2*fw;
  const cornerAdd=frameOn&&frameMode==='corners'?num('cornerAdd'):0;
- const finalW=cw+2*fw,finalH=ch+2*fw;
- const perimeterCm=2*(cw+ch)+(frameOn?(frameMode==='width'?8*fw:cornerAdd*100):0);
+ const perimeterCm=2*(innerW+innerH)+(frameOn?(frameMode==='width'?8*fw:cornerAdd*100):0);
  const lengthM=frameOn?perimeterCm/100:0;
- const sticks=frameOn&&num('stickLength')>0?Math.ceil(lengthM/num('stickLength')):0;
- const matArea=matOn?(cw*ch/10000):0;
- const glassArea=glassOn?(cw*ch/10000):(0);
+ const stickLen=num('stickLength');
+ const sticks=frameOn&&stickLen>0?Math.ceil(lengthM/stickLen):0;
+ const matArea=matOn?(innerW*innerH/10000):0;
+ const glassArea=glassOn?(innerW*innerH/10000):0;
  const matCost=matArea*num('matPrice');
  const frameCost=lengthM*num('framePrice');
  const glassCost=glassArea*num('glassPrice');
  const total=matCost+frameCost+glassCost;
- $('rArt').textContent=size(aw,ah);$('rMat').textContent=size(cw,ch);$('rFinal').textContent=frameOn?size(finalW,finalH):size(cw,ch);
+ $('rArt').textContent=size(aw,ah);$('rInner').textContent=size(innerW,innerH);$('rOuter').textContent=frameOn?size(outerW,outerH):size(innerW,innerH);
  $('rLength').textContent=frameOn?`${fmt(lengthM)} m`:'Netaikoma';$('rSticks').textContent=frameOn?`${sticks} vnt.`:'0 vnt.';
- $('rMatCost').textContent=matOn?euro(matCost):'Išjungta';$('rFrameCost').textContent=frameOn?euro(frameCost):'Išjungta';
- $('glassLabel').textContent=`Stiklas (${ $('glassType').value==='clear'?'skaidrus':'matinis' })`;
- $('rGlassCost').textContent=glassOn?euro(glassCost):'Išjungta';$('rTotal').textContent=euro(total);
- $('summaryArt').textContent=size(aw,ah);$('summaryMat').textContent=matOn?size(cw,ch):'Nenaudojamas';
- $('previewW').textContent=frameOn?cm(finalW):cm(cw);$('previewH').textContent=frameOn?cm(finalH):cm(ch);
+ $('rMatCost').textContent=matOn?euro(matCost):'Išjungtas';$('rFrameCost').textContent=frameOn?euro(frameCost):'Išjungtas';
+ $('glassLabel').textContent=glassOn?`Stiklas (${gType==='clear'?'skaidrus':'matinis'})`:'Stiklas';
+ $('rGlassCost').textContent=glassOn?euro(glassCost):'Nereikia';$('rTotal').textContent=euro(total);
+ $('summaryArt').textContent=size(aw,ah);$('summaryInner').textContent=size(innerW,innerH);$('summaryOuter').textContent=frameOn?size(outerW,outerH):size(innerW,innerH);
+ $('previewW').textContent=cm(frameOn?outerW:innerW);$('previewH').textContent=cm(frameOn?outerH:innerH);
  $('previewCaption').textContent=`Darbas ${orientation==='portrait'?'vertikalus':'horizontalus'} • peržiūra scheminė, ne tikslaus mastelio`;
- // Scale visual by aspect ratio while keeping the frame within the available area.
  let w=aw,h=ah;if(orientation==='landscape'&&w<h){[w,h]=[h,w]}if(orientation==='portrait'&&w>h){[w,h]=[h,w]}
- const aspect=w/h;let vh= Math.min(390, 360);let vw=vh*aspect;
- if(vw>340){vw=340;vh=vw/aspect}
- const matX=matOn?Math.max(0,ml+mr)/2:0,matY=matOn?Math.max(0,mt+mb)/2:0;
- const outerW=frameOn?Math.max(1,fw):0;
+ const aspect=w/h;let vh=360,vw=vh*aspect;if(vw>340){vw=340;vh=vw/aspect}
  const matVisual=$('matVisual'),frameVisual=$('frameVisual'),artVisual=$('artVisual');
- frameVisual.classList.toggle('no-frame',!frameOn);matVisual.style.background=matOn?'#f4efe5':'transparent';matVisual.style.padding=matOn?'clamp(8px,1.8vw,24px)':'0';
- // CSS dimensions visually respond to proportions and the average mat/frame size.
- artVisual.style.width=`${Math.max(70,vw)}px`;artVisual.style.height=`${Math.max(90,vh)}px`;
- artVisual.style.aspectRatio=`${w}/${h}`;
+ frameVisual.classList.toggle('no-frame',!frameOn);matVisual.style.background=matOn?'#f4efe5':'transparent';
+ artVisual.style.width=`${Math.max(70,vw)}px`;artVisual.style.height=`${Math.max(90,vh)}px`;artVisual.style.aspectRatio=`${w}/${h}`;
  frameVisual.style.padding=frameOn?`${Math.max(7,Math.min(24,fw*6))}px`:'0';
  matVisual.style.padding=matOn?`${Math.max(8,Math.min(40,(mt+mb+ml+mr)*1.1))}px`:'0';
- // Make asymmetric margins visible by shifting artwork inside the mat.
  matVisual.style.paddingTop=matOn?`${Math.max(8,Math.min(55,mt*5))}px`:'0';
  matVisual.style.paddingBottom=matOn?`${Math.max(8,Math.min(55,mb*5))}px`:'0';
  matVisual.style.paddingLeft=matOn?`${Math.max(8,Math.min(55,ml*5))}px`:'0';
  matVisual.style.paddingRight=matOn?`${Math.max(8,Math.min(55,mr*5))}px`:'0';
  frameVisual.style.maxWidth='100%';frameVisual.style.maxHeight='490px';
  $('details').innerHTML=`
- <div><span>Darbo dydis</span><b>${size(aw,ah)}</b></div>
- <div><span>Pasporto kraštinės</span><b>${matOn?`V ${fmt(mt)} / A ${fmt(mb)} / K ${fmt(ml)} / D ${fmt(mr)} cm`:'Nenaudojamas'}</b></div>
- <div><span>Dydis su pasportu</span><b>${size(cw,ch)}</b></div>
- <div><span>Bageto skaičiavimo būdas</span><b>${!frameOn?'Išjungtas':frameMode==='width'?`Plotis ${fmt(fw)} cm`:`Kampų suma ${fmt(cornerAdd)} m`}</b></div>
- <div><span>Perimetras prieš bageto kampus</span><b>${fmt(2*(cw+ch))} cm</b></div>
- <div><span>Bageto kampų priedas</span><b>${!frameOn?'0':frameMode==='width'?`${fmt(8*fw)} cm`:`${fmt(cornerAdd*100)} cm`}</b></div>
- <div><span>Bendras bageto ilgis</span><b>${fmt(lengthM)} m</b></div>
- <div><span>Bageto lazdos</span><b>${frameOn?`${sticks} × ${fmt(num('stickLength'))} m`:'Netaikoma'}</b></div>
- <div><span>Pasporto plotas / kaina</span><b>${matOn?`${fmt(matArea,4)} m² / ${euro(matCost)}`:'Išjungtas'}</b></div>
- <div><span>Stiklo tipas / plotas</span><b>${glassOn?`${$('glassType').value==='clear'?'Skaidrus':'Matinis'} / ${fmt(glassArea,4)} m²`:'Išjungtas'}</b></div>
- <div><span>Stiklo kaina</span><b>${glassOn?euro(glassCost):'Išjungta'}</b></div>`;
+ <div><span>Darbo matmenys</span><b>${size(aw,ah)}</b></div>
+ <div><span>Pasporto kraštinės</span><b>${matOn?`Viršus ${fmt(mt)} / Kairė ${fmt(ml)} / Dešinė ${fmt(mr)} / Apačia ${fmt(mb)} cm`:'Nenaudojamas'}</b></div>
+ <div><span>Vidiniai matmenys</span><b>${size(innerW,innerH)}</b></div>
+ <div><span>Išoriniai matmenys</span><b>${frameOn?size(outerW,outerH):'Bagetas išjungtas'}</b></div>
+ <div><span>Bageto skaičiavimo būdas</span><b>${!frameOn?'Išjungtas':frameMode==='width'?`Plotis ${fmt(fw)} cm`:`Kampų priedas ${fmt(cornerAdd)} m`}</b></div>
+ <div><span>Reikalingas bageto ilgis</span><b>${fmt(lengthM)} m</b></div>
+ <div><span>Bageto lazdos</span><b>${frameOn?`${sticks} × ${fmt(stickLen)} m`:'Netaikoma'}</b></div>
+ <div><span>Pasporto kaina</span><b>${matOn?euro(matCost):'Išjungtas'}</b></div>
+ <div><span>Stiklo tipas</span><b>${gType==='none'?'Nereikia':gType==='clear'?'Skaidrus':'Matinis'}</b></div>
+ <div><span>Stiklo kaina</span><b>${glassOn?euro(glassCost):'Nereikia'}</b></div>`;
 }
-document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',update));
-$('reset').addEventListener('click',()=>{ $('artW').value=40;$('artH').value=60;$('matOn').checked=true;$('matTop').value=4;$('matBottom').value=2;$('matLeft').value=4;$('matRight').value=4;$('matPrice').value=15;$('frameOn').checked=true;$('frameWidth').value=2;$('cornerAdd').value=.16;$('framePrice').value=25;$('glassOn').checked=true;$('glassType').value='clear';$('glassPrice').value=20;$('stickLength').value=3;orientation='portrait';frameMode='width';setSegment('orientation','data-value',orientation);setSegment('frameMode','data-value',frameMode);$('frameWidthField').classList.remove('hidden');$('cornerField').classList.add('hidden');update()});
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',update));
+$('reset').addEventListener('click',()=>{
+ $('artW').value=40;$('artH').value=60;$('matOn').checked=true;$('matTop').value=4;$('matBottom').value=2;$('matLeft').value=4;$('matRight').value=4;$('matPrice').value=15;
+ $('frameOn').checked=true;$('frameWidth').value=2;$('cornerAdd').value=.16;$('framePrice').value=25;$('stickLength').value=3;
+ document.querySelector('input[name="glassType"][value="clear"]').checked=true;$('glassPrice').value=20;
+ orientation='portrait';frameMode='width';setSegment('orientation',orientation);setSegment('frameMode',frameMode);$('cornerField').classList.add('hidden');update()
+});
 update();
 </script>
 </body>
