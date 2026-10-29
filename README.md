@@ -11,7 +11,7 @@ Atidarykite `index.html` naršyklėje.
 3. Atidarykite **Settings → Pages**.
 4. Prie **Build and deployment** pasirinkite **Deploy from a branch**.
 5. Branch pasirinkite `main`, katalogą `/ (root)`, spauskite **Save**.
-6. Palaukite, kol GitHub Pages paskelbs svetainę. Adresas bus panašus į `https://JUSU-VARDAS.github.io/reminimo-skaiciuokle/`.
+6. Palaukite, kol GitHub Pages paskelbs svetainę. Adresas bus panašus į `https://andrnav.github.io/reminimo-skaiciuokle/`.
 
 ## Ar reikia Cloudflare duomenų bazės?
 Ne, dabartinei versijai nereikia nei duomenų bazės, nei serverio funkcijų. Visi skaičiavimai atliekami lankytojo naršyklėje. GitHub Pages pakanka.
