@@ -1,0 +1,1008 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rėminimo skaičiuoklė</title>
+<style>
+:root{--blue:#287ee8;--blue2:#eaf3ff;--ink:#15213b;--muted:#667085;--line:#e3e8ef;--bg:#f4f6f9;--green:#087443}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:20px 28px;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px}
+h1{font-size:23px;margin:0}header p{margin:3px 0 0;color:var(--muted);font-size:13px}
+main{display:grid;grid-template-columns:minmax(290px,1fr) minmax(330px,1.35fr) minmax(280px,.95fr);gap:18px;padding:18px;max-width:1700px;margin:auto;align-items:start}
+.panel,.card{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:0 3px 14px #1c2b4410}
+.controls{display:grid;gap:12px}.card{padding:17px}.card h2{font-size:18px;margin:0 0 14px}.card h3{font-size:15px;margin:0 0 10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row.three{grid-template-columns:repeat(3,1fr)}
+label{display:block;font-size:12px;color:#3f4b60;margin-bottom:5px}
+input,select{width:100%;border:1px solid #ccd5e1;border-radius:8px;padding:10px 11px;background:white;color:var(--ink);font:inherit;min-width:0}
+input:focus,select:focus{outline:2px solid #b7d6ff;border-color:var(--blue)}
+.field{min-width:0}.toggleline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.switch{appearance:none;width:44px;height:25px;border:0;border-radius:30px;background:#cbd2dc;position:relative;cursor:pointer;flex:none;padding:0}
+.switch:before{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;background:#fff;border-radius:50%;transition:.18s}
+.switch:checked{background:var(--blue)}.switch:checked:before{left:22px}
+.segment{display:flex;background:#f1f3f6;padding:3px;border-radius:9px;gap:3px;margin-bottom:12px}
+.segment button{flex:1;border:0;background:transparent;padding:8px 5px;border-radius:7px;color:var(--ink);cursor:pointer;font:inherit;font-size:13px}
+.segment button.active{background:var(--blue);color:white;box-shadow:0 2px 5px #0001}
+.hint{font-size:12px;color:var(--muted);margin:9px 0 0}
+.backing-type-bubbles{display:flex;flex-wrap:wrap;gap:9px;margin-top:7px}
+.backing-bubble{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--line,#d7e0ea);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;font:inherit;font-size:13px;transition:border-color .15s,background .15s,box-shadow .15s}
+.backing-bubble:hover{border-color:var(--blue)}
+.backing-bubble.active{border-color:var(--blue);background:#eaf3ff;box-shadow:0 0 0 2px #267cf018;color:var(--blue);font-weight:600}
+.bubble-dot{width:13px;height:13px;border:2px solid #9aa9bb;border-radius:50%;display:inline-block;position:relative;flex:none}
+.backing-bubble.active .bubble-dot{border-color:var(--blue)}
+.backing-bubble.active .bubble-dot:after{content:"";position:absolute;inset:3px;background:var(--blue);border-radius:50%}
+
+.hidden{display:none!important}
+.center{display:grid;gap:12px;position:sticky;top:12px}
+.previewcard{padding:18px;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#eef4f8 0,#dbe5ed 56%,#c8d5df 100%)}
+.preview-wrap{width:100%;display:flex;align-items:center;justify-content:center;min-height:480px;position:relative;padding:24px 12px}
+.frame{position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#98632e 0%,#f2d18a 12%,#9a642b 24%,#f4d28a 39%,#8b5524 54%,#e7bd70 68%,#70451f 84%,#e4bd79 100%);padding:clamp(8px,1.5vw,19px);box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #593716,inset 0 0 0 5px #d6a45a;transition:all .2s ease;max-width:100%;max-height:490px;border-radius:2px}
+.frame.no-frame{padding:0;background:transparent;box-shadow:none}
+.mat{background:linear-gradient(135deg,#fffdf7,#e9e0d0);padding:clamp(8px,1.8vw,24px);box-shadow:inset 0 0 0 1px #d9d0c2,0 0 0 1px #b9ad99;display:flex;align-items:center;justify-content:center}
+.frame.no-frame .mat{box-shadow:none}
+.art{background:#eee7da;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;min-width:0;min-height:0;box-shadow:none}
+.art svg{display:block;width:100%;height:100%;min-width:0;min-height:0;object-fit:cover}
+/* Stiklo atspindys rodomas tik tada, kai stiklas įjungtas. */
+.art.glass-on::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(122deg,transparent 0%,rgba(255,255,255,.04) 30%,rgba(255,255,255,.42) 42%,rgba(255,255,255,.10) 49%,transparent 58%),linear-gradient(180deg,rgba(255,255,255,.16),transparent 24%,transparent 78%,rgba(255,255,255,.08));box-shadow:inset 0 0 0 1px rgba(255,255,255,.38)}
+.art.glass-matte::after{background:linear-gradient(122deg,transparent 0%,rgba(255,255,255,.08) 30%,rgba(255,255,255,.24) 42%,rgba(255,255,255,.08) 49%,transparent 58%),rgba(255,255,255,.08);backdrop-filter:blur(.35px)}
+.dim{position:absolute;font-size:12px;font-weight:700;color:#182338;background:#ffffffdb;padding:3px 7px;border-radius:5px;white-space:nowrap}
+.dim.top{top:1px;left:50%;transform:translateX(-50%)}.dim.side{left:0;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center}
+.frame.style-black{background:linear-gradient(135deg,#08090b 0%,#53565a 12%,#17191d 23%,#777a7e 34%,#111215 48%,#414348 62%,#08090b 80%,#5d6064 100%);box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #050506,inset 0 0 0 5px #777a7e}
+.frame.style-white{background:linear-gradient(135deg,#c7c9ca 0%,#fff 12%,#d7d9da 24%,#fff 39%,#c2c5c7 54%,#fdfdfd 68%,#b9bcbe 84%,#fff 100%);box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #a8abad,inset 0 0 0 5px #fff}
+.frame.style-gold{background:linear-gradient(135deg,#98632e 0%,#f2d18a 12%,#9a642b 24%,#f4d28a 39%,#8b5524 54%,#e7bd70 68%,#70451f 84%,#e4bd79 100%)}
+.frame-visual-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.visual-choice{border:1px solid #d7dee8;background:#fff;border-radius:11px;padding:10px 8px;display:flex;align-items:center;gap:9px;cursor:pointer;color:var(--ink);font:inherit;text-align:left}.visual-choice:hover{border-color:#8ab9f7;background:#f8fbff}.visual-choice.active{border:2px solid var(--blue);padding:9px 7px;background:#eff6ff}.swatch{display:block;width:31px;height:31px;border-radius:6px;flex:none;box-shadow:inset 0 0 0 1px #0002,0 2px 4px #0001}.swatch.gold{background:linear-gradient(135deg,#82501e,#f3d28b,#9b672d,#e8bd70)}.swatch.black{background:linear-gradient(135deg,#050506,#73767a,#111)}.swatch.white{background:linear-gradient(135deg,#bfc2c4,#fff,#d4d6d7)}.visual-choice strong{display:block;font-size:13px}.visual-choice small{display:block;color:var(--muted);font-size:10px}.preview-note{text-align:center;color:var(--muted);font-size:12px}
+.result-card h2{margin-bottom:10px}.result-line{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #edf0f4;align-items:baseline}.result-line:last-child{border-bottom:0}.result-line span{color:#475467}.result-line strong{text-align:right;font-size:15px}.total{background:#eaf8f0;border-radius:10px;padding:13px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;color:var(--green);font-weight:750;font-size:17px}.details{background:#f8fafc;border-radius:10px;padding:13px;margin-top:12px;font-size:12px;color:#4b5565}.details div{display:flex;justify-content:space-between;gap:12px;padding:4px 0}.details b{color:var(--ink);text-align:right}.reset{border:0;background:#e9edf3;color:var(--ink);border-radius:9px;padding:12px;width:100%;font:inherit;cursor:pointer}.tag{font-size:11px;background:var(--blue2);color:#175db3;padding:4px 8px;border-radius:20px}
+.dimension-fields{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}.dimension-fields .x{font-size:18px;color:var(--muted);padding-bottom:8px}
+.dimension-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:12px}.dimension-item{min-width:0}.dimension-item label{font-size:10px;margin-bottom:3px}.dimension-item strong{font-size:12px;white-space:nowrap;letter-spacing:-.3px}@media(max-width:390px){.dimension-summary{gap:4px;padding:9px 6px}.dimension-item label{font-size:9px}.dimension-item strong{font-size:10px}}
+.mat-layout{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto;gap:8px;align-items:center}
+.mat-layout .topside{grid-column:2;grid-row:1}.mat-layout .leftside{grid-column:1;grid-row:2}.mat-layout .rightside{grid-column:3;grid-row:2}.mat-layout .bottomside{grid-column:2;grid-row:3}
+.mat-layout .field input{text-align:center;padding:9px 6px}
+.radio-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.radio-option{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #ccd5e1;border-radius:9px;padding:10px 5px;cursor:pointer;font-size:13px;margin:0;color:var(--ink);background:#fff}
+.radio-option:has(input:checked){border-color:var(--blue);background:var(--blue2);color:#175db3;font-weight:650}
+.radio-option input{width:auto;margin:0;accent-color:var(--blue)}
+@media(max-width:1100px){main{grid-template-columns:minmax(270px,1fr) minmax(300px,1fr)}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.right .card{margin:0}.center{position:static}}
+@media(max-width:720px){header{padding:16px;align-items:flex-start}main{display:flex;flex-direction:column;padding:12px}.controls,.center,.right{width:100%}.center{order:2}.right{order:3;display:flex;flex-direction:column}.previewcard{min-height:400px}.preview-wrap{min-height:360px}.frame{max-height:350px}.row.three{grid-template-columns:1fr 1fr}.card{padding:14px}.radio-options{gap:4px}.radio-option{font-size:12px;padding:9px 2px}}
+
+.print-button{width:100%;margin-top:10px;padding:13px 16px;border:1px solid #287ee8;border-radius:10px;background:#287ee8;color:#fff;font:600 15px inherit;cursor:pointer}
+.print-button:hover{background:#176bd0}
+#printSheet{display:none}
+@media print{
+ @page{size:A4 portrait;margin:10mm}
+ html,body{width:190mm!important;height:277mm!important;margin:0!important;padding:0!important;background:#fff!important;color:#000!important;overflow:hidden!important}
+ body>*{display:none!important}
+ body>#printSheet{display:block!important;position:relative!important;inset:auto!important;width:190mm!important;height:277mm!important;max-height:277mm!important;overflow:hidden!important;margin:0!important;padding:0!important;background:#fff!important;color:#000!important;font:10pt/1.3 Arial,sans-serif;box-sizing:border-box!important}
+ #printSheet *{box-sizing:border-box!important;visibility:visible!important;filter:none!important;backdrop-filter:none!important;text-shadow:none!important}
+ .print-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5pt solid #000;padding-bottom:5mm;margin-bottom:6mm}
+ .print-header h1{font-size:19pt;margin:0 0 2mm;color:#000}
+ .print-header p{margin:0;color:#333;font-size:9pt}
+ .print-date{font-size:9pt;color:#333}
+ .print-top{display:grid;grid-template-columns:88mm 1fr;gap:7mm;align-items:center;margin-bottom:6mm;break-inside:avoid;page-break-inside:avoid}
+ .print-visual{display:flex;align-items:center;justify-content:center;width:88mm;height:105mm;min-height:0;padding:4mm;background:#fff;border:0.5pt solid #bbb;border-radius:0;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+ .print-visual .frame{max-width:80mm!important;max-height:97mm!important;width:auto!important;height:auto!important;padding:2mm!important;background:#222!important;border:1.2pt solid #000!important;border-radius:0!important;box-shadow:none!important;inset:auto!important;overflow:hidden!important}
+ .print-visual .frame.no-frame{padding:0!important;background:#fff!important;border:0!important}
+ .print-visual .mat{background:#fff!important;padding:5mm!important;border:0.7pt solid #777!important;box-shadow:none!important}
+ .print-visual .art{background:#fff!important;box-shadow:none!important;overflow:hidden!important}
+ .print-visual .art svg{filter:grayscale(1) contrast(1.12)!important}
+ .print-visual .art::after{display:none!important}
+ .print-visual .dim{display:none!important}
+ .print-dimensions h2,.print-costs h2{font-size:12pt;margin:0 0 3mm;padding-bottom:2mm;border-bottom:1pt solid #777;color:#000}
+ .print-dimensions>div{display:flex;justify-content:space-between;gap:3mm;padding:2.5mm 0;border-bottom:0.5pt solid #ccc;font-size:9pt;color:#000}
+ .print-dimensions strong{text-align:right;color:#000}
+ .print-costs{break-inside:avoid;page-break-inside:avoid}
+ #printDetails>div{display:flex;justify-content:space-between;gap:4mm;padding:2mm 0;border-bottom:0.5pt solid #ccc;font-size:8.5pt;color:#000}
+ #printDetails>div b{text-align:right;font-weight:600;color:#000}
+ .print-total{display:flex;justify-content:space-between;align-items:center;margin-top:4mm;padding:3mm 0;border-top:1.5pt solid #000;font-size:12pt;font-weight:700;color:#000}
+ .print-footnote{margin-top:5mm;padding-top:2mm;border-top:0.5pt solid #aaa;color:#333;font-size:8pt}
+}
+
+
+/* MOBILE REDESIGN: desktop rules above remain unchanged */
+@media (max-width:720px) {
+  html { -webkit-text-size-adjust:100%; }
+  body { min-width:320px; font-size:15px; background:#f3f5f8; }
+  header {
+    position:relative;
+    padding:16px 16px 14px;
+    align-items:center;
+    gap:10px;
+    box-shadow:0 2px 8px #15213b08;
+  }
+  h1 { font-size:20px; line-height:1.2; }
+  header p { font-size:12px; line-height:1.35; max-width:245px; }
+  header .tag { flex:none; font-size:10px; }
+
+  main {
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    width:100%;
+    max-width:560px;
+    margin:0 auto;
+    padding:12px 12px calc(28px + env(safe-area-inset-bottom));
+    align-items:stretch;
+  }
+  .center, .controls, .right {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    width:100%;
+    min-width:0;
+    position:static;
+    order:initial;
+  }
+  /* Preview first, then the controls, then the price breakdown. */
+  .center { order:0; }
+  .controls { order:1; }
+  .right { order:2; }
+
+  .card, .panel {
+    width:100%;
+    min-width:0;
+    padding:15px;
+    border-radius:14px;
+    box-shadow:0 2px 10px #1c2b440a;
+  }
+  .card h2 { font-size:16px; margin-bottom:12px; }
+  .card h3 { font-size:14px; }
+
+  .previewcard {
+    min-height:0;
+    height:auto;
+    padding:12px;
+    border-radius:14px;
+    overflow:visible;
+  }
+  .preview-wrap {
+    width:100%;
+    min-height:0;
+    max-height:none;
+    padding:14px 4px;
+    overflow:visible;
+  }
+  .frame {
+    max-width:100%;
+    max-height:none;
+    padding:10px;
+    flex:none;
+  }
+  .mat { max-width:100%; }
+  .art { min-width:0; min-height:0; max-width:100%; }
+  .art svg { min-width:0; min-height:0; }
+  .preview-note { padding:0 8px; font-size:11px; line-height:1.4; }
+  .frame-visual-options { grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+  .visual-choice {
+    min-width:0;
+    min-height:62px;
+    padding:8px 6px;
+    gap:6px;
+    border-radius:10px;
+    justify-content:flex-start;
+  }
+  .visual-choice.active { padding:7px 5px; }
+  .swatch { width:25px; height:25px; }
+  .visual-choice strong { font-size:11px; }
+  .visual-choice small { font-size:9px; line-height:1.2; }
+  .dimension-summary { padding:11px 8px; gap:5px; }
+  .dimension-item label { font-size:9px; }
+  .dimension-item strong { display:block; font-size:11px; white-space:normal; line-height:1.25; overflow-wrap:anywhere; }
+
+  .row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px; }
+  .row.three { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .dimension-fields { grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr); gap:7px; }
+  .dimension-fields .x { text-align:center; }
+  label { font-size:12px; }
+  input:not([type="radio"]):not([type="checkbox"]), select {
+    width:100%;
+    min-width:0;
+    min-height:46px;
+    padding:11px 12px;
+    border-radius:10px;
+    font-size:16px;
+    line-height:1.2;
+    touch-action:manipulation;
+  }
+  input[type="radio"] { width:18px; height:18px; flex:none; }
+  .field { min-width:0; }
+  .toggleline { min-height:34px; gap:12px; }
+  .toggleline h2 { margin:0; line-height:1.25; }
+  .switch {
+    width:50px;
+    height:29px;
+    min-width:50px;
+    min-height:29px;
+    padding:0;
+    touch-action:manipulation;
+  }
+  .switch:before { width:23px; height:23px; top:3px; left:3px; }
+  .switch:checked:before { left:24px; }
+
+  .segment {
+    width:100%;
+    min-height:48px;
+    padding:4px;
+    gap:4px;
+    margin:12px 0 0;
+  }
+  .segment button {
+    min-width:0;
+    min-height:44px;
+    padding:9px 7px;
+    border-radius:8px;
+    font-size:13px;
+    line-height:1.2;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .backing-type-bubbles { gap:8px; }
+  .backing-bubble {
+    min-height:44px;
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:13px;
+    line-height:1.25;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .radio-options { grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .radio-option {
+    min-width:0;
+    min-height:48px;
+    padding:8px 5px;
+    gap:5px;
+    font-size:11px;
+    line-height:1.2;
+    text-align:center;
+    overflow-wrap:anywhere;
+  }
+  .mat-layout { gap:8px; }
+  .mat-layout .field input { text-align:center; padding:10px 5px; }
+  .hint { font-size:11px; line-height:1.4; }
+  .result-line { gap:10px; padding:11px 0; font-size:13px; }
+  .result-line span { min-width:0; line-height:1.35; }
+  .result-line strong { flex:none; max-width:52%; font-size:14px; overflow-wrap:anywhere; }
+  .total { gap:12px; padding:14px; font-size:16px; }
+  .total strong { text-align:right; }
+  .details { padding:11px; overflow-wrap:anywhere; }
+  .details div { gap:10px; align-items:flex-start; line-height:1.35; }
+  .details b { max-width:58%; }
+  .reset, .print-button {
+    min-height:48px;
+    margin-top:0;
+    padding:13px 14px;
+    border-radius:11px;
+    font-size:14px;
+    touch-action:manipulation;
+  }
+  button, label, select, input { -webkit-tap-highlight-color:transparent; }
+  button:focus-visible, input:focus-visible, select:focus-visible {
+    outline:3px solid #9bc6ff;
+    outline-offset:2px;
+  }
+}
+
+@media (max-width:390px) {
+  header { padding-left:13px; padding-right:13px; }
+  header .tag { padding:4px 6px; }
+  main { padding-left:9px; padding-right:9px; }
+  .card { padding:13px; }
+  .frame-visual-options { gap:5px; }
+  .visual-choice { gap:4px; padding-left:4px; padding-right:4px; }
+  .visual-choice.active { padding-left:3px; padding-right:3px; }
+  .swatch { width:22px; height:22px; }
+  .visual-choice strong { font-size:10px; }
+  .visual-choice small { font-size:8px; }
+  .backing-bubble { padding:9px 10px; font-size:12px; }
+  .radio-option { font-size:10px; }
+}
+
+
+
+/* BRAND REDESIGN: forest green + white, with restrained charcoal */
+:root {
+  --blue:#16834a;
+  --blue2:#e8f5ed;
+  --ink:#17231d;
+  --muted:#68766e;
+  --line:#dce7df;
+  --bg:#f2f6f3;
+  --green:#116b3d;
+}
+body {
+  background:
+    radial-gradient(ellipse at 8% 0%, #e3f1e8 0, transparent 34%),
+    var(--bg);
+  color:var(--ink);
+}
+header {
+  background:#fff;
+  border-bottom:1px solid #d8e5dc;
+  box-shadow:0 5px 20px #173c2810;
+}
+header h1 {
+  color:#124d30;
+  letter-spacing:-.55px;
+  font-weight:800;
+}
+header p { color:#718078; }
+.tag {
+  background:#e6f4eb;
+  color:#176b3e;
+  font-weight:700;
+  letter-spacing:.15px;
+}
+main { gap:16px; }
+.card,.panel {
+  border:1px solid #dce7df;
+  border-radius:16px;
+  box-shadow:0 5px 18px #183b2810;
+}
+.card h2,.card h3 { color:#173b29; letter-spacing:-.2px; }
+.card h2 { font-weight:750; }
+label { color:#526158; font-weight:600; }
+input:not([type="radio"]):not([type="checkbox"]),select {
+  border-color:#cbd9cf;
+  border-radius:10px;
+  background:#fff;
+  color:#17231d;
+}
+input:focus,select:focus {
+  outline:3px solid #b9e2c9;
+  border-color:#16834a;
+}
+.switch:checked { background:#16834a; }
+.segment {
+  background:#edf3ef;
+  border:1px solid #e1eae4;
+}
+.segment button { color:#405247; }
+.segment button.active {
+  background:#167a45;
+  color:#fff;
+  box-shadow:0 3px 8px #12683b35;
+}
+.backing-bubble {
+  border-color:#d2dfd6;
+  color:#263d30;
+}
+.backing-bubble:hover {
+  border-color:#6bb889;
+  background:#f5fbf7;
+}
+.backing-bubble.active {
+  border-color:#16834a;
+  background:#e8f5ed;
+  color:#12663a;
+  box-shadow:0 0 0 2px #16834a16;
+}
+.backing-bubble.active .bubble-dot { border-color:#16834a; }
+.backing-bubble.active .bubble-dot:after { background:#16834a; }
+.radio-option { border-color:#d1ded5; }
+.radio-option:has(input:checked) {
+  border-color:#16834a;
+  background:#e8f5ed;
+  color:#12663a;
+}
+.radio-option input { accent-color:#16834a; }
+.visual-choice { border-color:#d4e0d7; }
+.visual-choice:hover { border-color:#7fbd96; background:#f6fbf7; }
+.visual-choice.active {
+  border-color:#16834a;
+  background:#edf7f0;
+}
+.previewcard {
+  background:
+    radial-gradient(ellipse at 50% 38%,#e5f0e8 0,#d4e3d9 58%,#c2d5c9 100%);
+  border-color:#cbdcd0;
+}
+.preview-note { color:#607268; }
+.dimension-summary {
+  background:#fff;
+}
+.dimension-item label { color:#758279; }
+.dimension-item strong { color:#183d2a; }
+.result-card h2 { color:#155b36; }
+.result-line { border-bottom-color:#e8eee9; }
+.result-line span { color:#65736a; }
+.result-line strong { color:#172c20; }
+.total {
+  background:linear-gradient(110deg,#e3f4e9,#d5efdf);
+  color:#0d6738;
+  border:1px solid #bfe2cb;
+}
+.details {
+  background:#f4f8f5;
+  color:#58685e;
+}
+.details b { color:#193c29; }
+.hint { color:#78867d; }
+.reset {
+  background:#e7eee9;
+  color:#294333;
+  border:1px solid #d5e1d8;
+  font-weight:650;
+}
+.reset:hover { background:#dce9df; }
+.print-button {
+  background:#167a45;
+  border:1px solid #167a45;
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 4px 10px #12683b22;
+}
+.print-button:hover { background:#105f35; }
+button { transition:background .16s,border-color .16s,box-shadow .16s,transform .16s; }
+button:active { transform:translateY(1px); }
+button:focus-visible,input:focus-visible,select:focus-visible {
+  outline:3px solid #a8dabb;
+  outline-offset:2px;
+}
+
+/* Give each major step a clear visual rhythm without changing the calculator logic. */
+.controls > .card { position:relative; border-top:3px solid #16834a; }
+.controls > .card h2 { line-height:1.25; }
+.controls > .card .hint { margin-top:11px; }
+.center > .card { border-top:3px solid #16834a; }
+.right > .card { border-top:3px solid #16834a; }
+
+@media(max-width:720px) {
+  body {
+    background:#f2f6f3;
+  }
+  header {
+    background:linear-gradient(115deg,#104d2e 0%,#167a45 100%);
+    border-bottom:0;
+    box-shadow:0 5px 18px #104d2e25;
+  }
+  header h1 { color:#fff; font-size:19px; }
+  header p { color:#d9eee1; }
+  header .tag {
+    color:#145b35;
+    background:#fff;
+    border:1px solid #d9eee1;
+  }
+  main { gap:13px; }
+  .card,.panel {
+    border-radius:15px;
+    box-shadow:0 3px 13px #173c2810;
+  }
+  .center > .card:first-child { border-top-width:3px; }
+  .previewcard {
+    background:radial-gradient(ellipse at 50% 38%,#e5f0e8 0,#d4e3d9 58%,#c2d5c9 100%);
+  }
+  .controls > .card { padding:15px; }
+  .controls > .card h2 { font-size:15px; }
+  .right > .card { border-top-width:3px; }
+  .total { font-size:16px; }
+}
+
+
+/* Final preview: black frame, neutral grey mat, responsive full-bleed artwork. */
+.frame {
+  background:linear-gradient(135deg,#050706 0%,#343936 12%,#101311 25%,#565d58 37%,#151916 52%,#3d443f 67%,#080a09 84%,#4b524d 100%);
+  box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #050606,inset 0 0 0 5px #68716b;
+}
+.frame.style-black {
+  background:linear-gradient(135deg,#050706 0%,#343936 12%,#101311 25%,#565d58 37%,#151916 52%,#3d443f 67%,#080a09 84%,#4b524d 100%);
+  box-shadow:0 22px 35px #14233338,inset 0 0 0 2px #050606,inset 0 0 0 5px #68716b;
+}
+.mat {
+  background:linear-gradient(135deg,#f4f5f3,#e6e9e7) !important;
+  box-shadow:inset 0 0 0 1px #d5d9d6,0 0 0 1px #c2c8c4;
+  box-sizing:border-box;
+  flex:0 0 auto;
+}
+.art {
+  box-shadow:none !important;
+  border:0 !important;
+  outline:0 !important;
+  background:#e8e3d9;
+  box-sizing:border-box;
+  flex:0 0 auto;
+  overflow:hidden;
+}
+.art svg {
+  display:block;
+  width:100%;
+  height:100%;
+  min-width:100%;
+  min-height:100%;
+  border:0;
+  outline:0;
+  object-fit:cover;
+}
+
+
+/* Kambario siena: gaivus šalavijo ir samanų žalumo tinkas, subtili natūrali tekstūra. */
+.previewcard {
+  position:relative;
+  isolation:isolate;
+  background-color:#cbd9ce !important;
+  background-image:
+    radial-gradient(ellipse 72% 48% at 14% 7%, rgba(250,255,246,.78) 0%, rgba(250,255,246,.28) 42%, transparent 78%),
+    linear-gradient(118deg, rgba(255,255,255,.22) 0%, transparent 36%, rgba(45,91,63,.07) 76%, rgba(36,77,53,.13) 100%),
+    radial-gradient(ellipse at 82% 72%, rgba(104,145,111,.18), transparent 58%),
+    repeating-linear-gradient(7deg, rgba(255,255,255,.045) 0px, rgba(255,255,255,.045) 1px, rgba(59,99,69,.025) 2px, transparent 7px),
+    repeating-linear-gradient(97deg, rgba(255,255,255,.03) 0px, rgba(255,255,255,.03) 1px, transparent 4px),
+    linear-gradient(135deg,#e0eae0 0%,#cbd9ce 48%,#b7cbbd 100%) !important;
+  box-shadow:inset 0 0 55px rgba(42,77,54,.10), 0 3px 13px #173c2810;
+}
+.previewcard::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.62;
+  background:
+    linear-gradient(132deg,rgba(248,255,248,.30) 0%,rgba(248,255,248,.10) 23%,transparent 48%),
+    linear-gradient(180deg,transparent 0%,rgba(255,255,255,.04) 58%,rgba(45,85,58,.11) 100%);
+}
+.preview-wrap { z-index:1; }
+/* Skaidrus stiklas: keli platūs, švelnūs lango atspindžiai ir subtilus krašto blizgesys. */
+.art.glass-on::after {
+  content:"";
+  position:absolute;
+  z-index:3;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(125deg, transparent 0%, rgba(255,255,255,.02) 25%, rgba(255,255,255,.34) 36%, rgba(255,255,255,.12) 42%, transparent 50%),
+    linear-gradient(125deg, transparent 54%, rgba(255,255,255,.13) 61%, rgba(255,255,255,.025) 69%, transparent 76%),
+    linear-gradient(180deg,rgba(255,255,255,.17) 0%,rgba(255,255,255,.035) 12%,transparent 32%,transparent 78%,rgba(225,239,232,.12) 100%),
+    linear-gradient(90deg,rgba(255,255,255,.13),transparent 3%,transparent 97%,rgba(255,255,255,.16));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.48), inset 0 0 14px rgba(255,255,255,.10);
+}
+.art.glass-matte::after {
+  background:
+    linear-gradient(125deg,transparent 0%,rgba(255,255,255,.12) 35%,rgba(255,255,255,.045) 48%,transparent 62%),
+    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),
+    rgba(239,245,240,.045);
+  backdrop-filter:blur(.2px);
+}
+
+
+/* Mobile: keep the three key dimensions pinned while the page scrolls */
+@media (max-width:720px) {
+  main { display:flex; flex-direction:column; }
+  .center { display:contents !important; }
+  .previewcard { order:0 !important; }
+  .dimension-summary {
+    order:1 !important;
+    position:sticky !important;
+    top:8px !important;
+    z-index:50 !important;
+    margin:0 0 2px !important;
+    background:rgba(255,255,255,.97) !important;
+    border:1px solid #dce5de !important;
+    box-shadow:0 5px 16px rgba(20,45,30,.16) !important;
+    backdrop-filter:blur(8px);
+  }
+  .controls { order:2 !important; }
+  .right { order:3 !important; }
+}
+
+/* Clean monochrome A4 frame drawing: one clear frame edge and one mat edge */
+@media print {
+  .print-visual {
+    border:0 !important;
+    padding:2mm !important;
+    background:#fff !important;
+  }
+  .print-visual .frame {
+    padding:2.5mm !important;
+    border:2.2mm solid #111 !important;
+    outline:0 !important;
+    background:#111 !important;
+    box-shadow:none !important;
+  }
+  .print-visual .mat {
+    padding:5mm !important;
+    border:0 !important;
+    outline:0 !important;
+    background:#f2f2f2 !important;
+    box-shadow:none !important;
+  }
+  .print-visual .art {
+    border:0 !important;
+    outline:0 !important;
+    box-shadow:none !important;
+    background:#fff !important;
+  }
+  .print-visual .art svg {
+    filter:grayscale(1) contrast(1.18) !important;
+  }
+  .print-visual .frame::before,
+  .print-visual .frame::after,
+  .print-visual .mat::before,
+  .print-visual .mat::after {
+    display:none !important;
+    content:none !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<header><div><h1>Rėminimo skaičiuoklė</h1><p>Matmenys, vizualizacija, medžiagos ir preliminari kaina</p></div><span class="tag">Vietinis įrankis</span></header>
+<main>
+<section class="controls">
+  <div class="card">
+    <h2>1. Rėminamas darbas</h2>
+    <div class="dimension-fields">
+      <div class="field"><label for="artW">Plotis (cm)</label><input id="artW" type="text" inputmode="decimal" value="" placeholder="—" autocomplete="off" autocapitalize="off"></div>
+      <div class="x">×</div>
+      <div class="field"><label for="artH">Ilgis (cm)</label><input id="artH" type="text" inputmode="decimal" value="" placeholder="—" autocomplete="off" autocapitalize="off"></div>
+    </div>
+    <label style="margin-top:12px">Orientacija</label>
+    <div class="segment" id="orientation"><button type="button" data-value="portrait" class="active">▯ Vertikalus</button><button type="button" data-value="landscape">▭ Horizontalus</button></div>
+  </div>
+  <div class="card">
+    <div class="toggleline"><h2>2. Paklijavimas ant pagrindo</h2><input class="switch" id="backingOn" type="checkbox" aria-label="Įjungti paklijavimą ant pagrindo"></div>
+    <div id="backingFields" class="hidden">
+      <div class="field"><label>Pagrindo tipas</label>
+        <select id="backingType" class="hidden" aria-hidden="true" tabindex="-1">
+          <option value="cardboard">Kartonas</option>
+          <option value="foam">Klijinga puta</option>
+          <option value="pvc">PVC</option>
+        </select>
+        <div class="backing-type-bubbles" id="backingTypeBubbles" role="group" aria-label="Pagrindo tipas">
+          <button type="button" class="backing-bubble active" data-value="cardboard" aria-pressed="true"><span class="bubble-dot"></span><span>Kartonas</span></button>
+          <button type="button" class="backing-bubble" data-value="foam" aria-pressed="false"><span class="bubble-dot"></span><span>Klijinga puta</span></button>
+          <button type="button" class="backing-bubble" data-value="pvc" aria-pressed="false"><span class="bubble-dot"></span><span>PVC</span></button>
+        </div>
+      </div>
+      <div id="backingColorField" class="hidden" style="margin-top:12px">
+        <label>Spalva</label>
+        <div class="radio-options">
+          <label class="radio-option"><input type="radio" name="backingColor" value="black" checked> Juoda</label>
+          <label class="radio-option"><input type="radio" name="backingColor" value="white"> Balta</label>
+        </div>
+      </div>
+      <div class="field"><label for="backingPrice">Pagrindo kaina (€/m²)</label><input id="backingPrice" type="number" min="0" step="0.01" value="25"></div>
+      <p class="hint">Plotas skaičiuojamas pagal vidinius matmenis: darbas + pasportas, jei jis naudojamas.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="toggleline"><h2>3. Pasportas</h2><input class="switch" id="matOn" type="checkbox" checked aria-label="Įjungti pasportą"></div>
+    <div id="matFields">
+      <div class="mat-layout">
+        <div class="field topside"><label for="matTop">Viršus (cm)</label><input id="matTop" type="number" min="0" step="0.1" value="4"></div>
+        <div class="field leftside"><label for="matLeft">Kairė (cm)</label><input id="matLeft" type="number" min="0" step="0.1" value="4"></div>
+        <div class="field rightside"><label for="matRight">Dešinė (cm)</label><input id="matRight" type="number" min="0" step="0.1" value="4"></div>
+        <div class="field bottomside"><label for="matBottom">Apačia (cm)</label><input id="matBottom" type="number" min="0" step="0.1" value="4"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label for="matPrice">Pasporto kaina (€/m²)</label><input id="matPrice" type="number" min="0" step="0.01" value="45"></div>
+    </div>
+    <p class="hint">Kaina skaičiuojama pagal pasporto ruošinio dydį.</p>
+  </div>
+  <div class="card">
+    <div class="toggleline"><h2>4. Bagetas</h2><input class="switch" id="frameOn" type="checkbox" checked aria-label="Įjungti bagetą"></div>
+    <div id="frameFields">
+      <div class="segment" id="frameMode"><button type="button" data-value="corners" class="active">Pagal kampų sumą</button><button type="button" data-value="width">Skaičiuoti pagal plotį</button></div>
+      <div class="field hidden" id="frameWidthField"><label for="frameWidth">Bageto plotis (cm)</label><input id="frameWidth" type="number" min="0" step="0.1" value="2"></div>
+      <div class="field hidden" id="cornerField" style="margin-top:10px"><label for="cornerAdd">Papildomas kampų ilgis (m)</label><input id="cornerAdd" type="number" min="0" step="0.01" value="0.16"></div>
+      <div class="field" style="margin-top:10px"><label for="framePrice">Bageto kaina (€/m)</label><input id="framePrice" type="number" min="0" step="0.01" value="25"></div>
+      <div class="field" style="margin-top:10px"><label for="stickLength">Vienos bageto lazdos ilgis (m)</label><input id="stickLength" type="number" min="0.1" step="0.1" value="3"></div>
+      <p class="hint">Numatytasis lazdos ilgis – 3 m. Reikalingų lazdų kiekis apvalinamas į didesnę pusę.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="toggleline"><h2>5. Stiklas</h2><input class="switch" id="glassEnabled" type="checkbox" aria-label="Įjungti stiklą"></div>
+    <div id="glassFields" class="hidden">
+      <div class="radio-options" id="glassOptions">
+        <label class="radio-option"><input type="radio" name="glassType" value="clear" checked> Skaidrus</label>
+        <label class="radio-option"><input type="radio" name="glassType" value="matte"> Matinis</label>
+      </div>
+      <div class="field" id="glassPriceField"><label for="glassPrice">Stiklo kaina (€/m²)</label><input id="glassPrice" type="number" min="0" step="0.01" value="35"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="toggleline"><h2>6. Nugarėlė</h2><input class="switch" id="backboardEnabled" type="checkbox" aria-label="Įjungti nugarėlę"></div>
+    <div id="backboardFields" class="hidden">
+      <div class="backing-type-bubbles" id="backboardOptions" role="group" aria-label="Nugarėlės tipas">
+        <button type="button" class="backing-bubble active" data-value="corrugated" aria-pressed="true"><span class="bubble-dot"></span><span>Gofruotas kartonas</span></button>
+        <button type="button" class="backing-bubble" data-value="hard" aria-pressed="false"><span class="bubble-dot"></span><span>Kietas kartonas</span></button>
+      </div>
+      <div class="field" id="backboardPriceField" style="margin-top:12px"><label for="backboardPrice">Nugarėlės kaina (€/m²)</label><input id="backboardPrice" type="number" min="0" step="0.01" value="11"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="toggleline"><h2>7. Pakabinimas</h2><input class="switch" id="hangerEnabled" type="checkbox" aria-label="Įjungti pakabinimą"></div>
+    <div id="hangerFields" class="hidden">
+      <div class="backing-type-bubbles" id="hangerOptions" role="group" aria-label="Pakabinimo tipas">
+        <button type="button" class="backing-bubble active" data-value="wire" aria-pressed="true"><span class="bubble-dot"></span><span>Troselis</span></button>
+        <button type="button" class="backing-bubble" data-value="crocodile" aria-pressed="false"><span class="bubble-dot"></span><span>Krokodilai</span></button>
+        <button type="button" class="backing-bubble" data-value="foam" aria-pressed="false"><span class="bubble-dot"></span><span>Putu pagrindo pak.</span></button>
+      </div>
+      <div class="row" id="hangerExtraFields" style="margin-top:12px">
+        <div class="field"><label for="hangerPrice">Pakabinimo kaina (€/vnt.)</label><input id="hangerPrice" type="number" min="0" step="0.01" value="1"></div>
+        <div class="field hidden" id="hangerQuantityField"><label for="hangerQuantity">Kiekis (vnt.)</label><input id="hangerQuantity" type="number" min="1" step="1" value="1" inputmode="numeric"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="center">
+  <div class="card previewcard">
+    <div class="preview-wrap" id="previewWrap">
+      <div class="frame style-black" id="frameVisual"><div class="mat" id="matVisual"><div class="art" id="artVisual" aria-label="Šviesus žalias botaninio miško printas">
+        <svg viewBox="0 0 1000 1000" role="img" aria-label="Realistiškas sodrių žalių tropinių lapų fotografijos stiliaus printas" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="photoBg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c5d9a8"/><stop offset=".28" stop-color="#668d58"/><stop offset=".66" stop-color="#244f3a"/><stop offset="1" stop-color="#102f29"/></linearGradient>
+    <linearGradient id="leafA" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#d4e9a8"/><stop offset=".22" stop-color="#8db66b"/><stop offset=".58" stop-color="#39784d"/><stop offset="1" stop-color="#174332"/></linearGradient>
+    <linearGradient id="leafB" x1="0" y1="0" x2="1" y2=".9"><stop stop-color="#a9ce78"/><stop offset=".4" stop-color="#4f8d50"/><stop offset="1" stop-color="#123c30"/></linearGradient>
+    <linearGradient id="leafC" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#e0edb6"/><stop offset=".35" stop-color="#77a95d"/><stop offset="1" stop-color="#24583d"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#f0f4ce" stop-opacity=".7"/><stop offset="1" stop-color="#e7efc8" stop-opacity="0"/></radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="24"/></filter>
+    <filter id="shadow"><feGaussianBlur stdDeviation="15"/></filter>
+    <pattern id="fineGrain" width="19" height="19" patternUnits="userSpaceOnUse"><circle cx="3" cy="5" r=".8" fill="#f4f6d8" opacity=".12"/><circle cx="14" cy="13" r=".7" fill="#071e18" opacity=".13"/></pattern>
+  </defs>
+  <rect width="1000" height="1000" fill="url(#photoBg)"/>
+  <ellipse cx="290" cy="160" rx="390" ry="280" fill="url(#glow)" filter="url(#soft)"/>
+  <g opacity=".42" filter="url(#soft)" fill="#d8e5b1"><ellipse cx="120" cy="360" rx="130" ry="330"/><ellipse cx="850" cy="230" rx="110" ry="300"/></g>
+  <g opacity=".34" fill="#0d3429"><path d="M-90 950C80 600 90 250 300 -80C270 300 330 660 120 1080Z"/><path d="M690 1080C600 650 720 230 1060 -80C900 360 920 720 850 1080Z"/></g>
+  <g transform="rotate(-24 290 500)">
+    <path d="M-80 900C-30 580 30 180 330 -80C410 250 390 620 110 1010C70 900 10 880 -80 900Z" fill="url(#leafA)"/>
+    <path d="M-55 900C85 590 190 250 330 -80" fill="none" stroke="#e3edbd" stroke-width="13" opacity=".72"/>
+    <g fill="none" stroke="#d6e6ad" stroke-width="5" opacity=".38"><path d="M35 760L-100 620M82 650L-65 500M130 540L10 390M178 420L75 290M230 290L155 180"/><path d="M35 760L190 650M82 650L245 535M130 540L290 420M178 420L330 300"/></g>
+  </g>
+  <g transform="rotate(20 740 480)">
+    <path d="M610 1080C530 740 540 310 820 -90C1010 270 1040 700 820 1080C760 930 680 920 610 1080Z" fill="url(#leafB)"/>
+    <path d="M715 1080C760 700 800 300 820 -90" fill="none" stroke="#c6df96" stroke-width="12" opacity=".7"/>
+    <g fill="none" stroke="#b7d58a" stroke-width="5" opacity=".34"><path d="M735 850L570 700M750 720L580 560M770 590L620 430M785 460L675 300M800 320L735 170"/><path d="M735 850L920 700M750 720L940 560M770 590L930 430M785 460L950 300"/></g>
+  </g>
+  <g transform="rotate(8 500 520)">
+    <path d="M240 1060C180 760 260 390 540 80C740 410 760 790 500 1080C440 900 340 900 240 1060Z" fill="url(#leafC)"/>
+    <path d="M370 1040C450 700 500 360 540 80" fill="none" stroke="#eff1c8" stroke-width="11" opacity=".66"/>
+    <g fill="none" stroke="#e1e9b7" stroke-width="5" opacity=".36"><path d="M405 870L245 700M435 740L290 560M465 610L350 430M490 470L410 300M420 850L610 690M455 710L650 550M480 570L670 410M510 420L650 270"/></g>
+  </g>
+  <g opacity=".5" fill="#e0e9bd"><ellipse cx="80" cy="120" rx="90" ry="170" transform="rotate(-35 80 120)"/><ellipse cx="920" cy="850" rx="75" ry="180" transform="rotate(28 920 850)"/></g>
+  <rect width="1000" height="1000" fill="url(#fineGrain)"/>
+  <rect width="1000" height="1000" fill="none" stroke="#102d24" stroke-opacity=".16" stroke-width="24"/>
+</svg>
+      </div></div>
+    </div>
+  </div>
+  </div>
+  <div class="preview-note" id="previewCaption">Rėmo spalvos pasirinkimas keičia tik peržiūrą, ne skaičiavimus.</div>
+  <div class="card dimension-summary">
+    <div class="dimension-item"><label>Darbo matmenys</label><strong id="summaryArt">40 × 60 cm</strong></div>
+    <div class="dimension-item"><label>Vidiniai matmenys</label><strong id="summaryInner">48 × 66 cm</strong></div>
+    <div class="dimension-item"><label>Išoriniai matmenys</label><strong id="summaryOuter">52 × 70 cm</strong></div>
+  </div>
+</section>
+
+<section class="right">
+  <div class="card result-card">
+    <h2>Rezultatai</h2>
+    <div class="result-line"><span>Darbo matmenys</span><strong id="rArt">40 × 60 cm</strong></div>
+    <div class="result-line"><span>Vidiniai matmenys</span><strong id="rInner">48 × 66 cm</strong></div>
+    <div class="result-line"><span>Išoriniai matmenys</span><strong id="rOuter">52 × 70 cm</strong></div>
+    <div class="result-line" id="rLengthRow"><span>Reikalingas bageto ilgis</span><strong id="rLength">2,44 m</strong></div>
+    <div class="result-line" id="rSticksRow"><span>Reikalingų lazdų kiekis</span><strong id="rSticks">1 vnt.</strong></div>
+  </div>
+  <div class="card result-card">
+    <h2>Kainos</h2>
+    <div class="result-line" id="backingCostRow"><span>Paklijavimas ant pagrindo</span><strong id="rBackingCost">Išjungtas</strong></div>
+    <div class="result-line" id="matCostRow"><span>Pasportas</span><strong id="rMatCost">4,95 €</strong></div>
+    <div class="result-line" id="frameCostRow"><span>Bagetas</span><strong id="rFrameCost">61,00 €</strong></div>
+    <div class="result-line" id="glassCostRow"><span id="glassLabel">Stiklas</span><strong id="rGlassCost">0,00 €</strong></div>
+    <div class="result-line hidden" id="backboardCostRow"><span id="backboardLabel">Nugarėlė</span><strong id="rBackboardCost">0,00 €</strong></div>
+    <div class="result-line hidden" id="hangerCostRow"><span id="hangerLabel">Pakabinimas</span><strong id="rHangerCost">0,00 €</strong></div>
+    <div class="total"><span>Bendra kaina</span><strong id="rTotal">72,29 €</strong></div>
+    <p class="hint">Preliminari medžiagų savikaina pagal įvestas kainas. Darbas, atliekos ir kitos išlaidos neįtrauktos.</p>
+  </div>
+  <div class="card">
+    <h3>Skaičiavimo detalės</h3>
+    <div class="details" id="details"></div>
+  </div>
+  <button class="reset" id="reset" type="button">↻ Išvalyti skaičiavimus</button>
+  <button class="print-button" id="printSchema" type="button">⎙ Spausdinti schemą</button>
+</section>
+</main>
+
+<div id="printSheet" aria-hidden="true">
+  <div class="print-header">
+    <div>
+      <h1>Rėminimo schema</h1>
+    </div>
+    <div class="print-date" id="printDate"></div>
+  </div>
+  <div class="print-top">
+    <div class="print-visual" id="printVisual"></div>
+    <div class="print-dimensions">
+      <h2>Matmenys</h2>
+      <div><span>Darbo matmenys</span><strong id="printArt"></strong></div>
+      <div><span>Vidiniai matmenys</span><strong id="printInner"></strong></div>
+      <div><span>Išoriniai matmenys</span><strong id="printOuter"></strong></div>
+    </div>
+  </div>
+  <div class="print-costs">
+    <h2>Medžiagos ir skaičiavimas</h2>
+    <div id="printDetails"></div>
+    <div class="print-total"><span>Bendra suma</span><strong id="printTotal"></strong></div>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let orientation='portrait',frameMode='corners';
+const num=id=>Math.max(0,Number($(id).value)||0);
+const fmt=(n,d=2)=>n.toLocaleString('lt-LT',{minimumFractionDigits:d,maximumFractionDigits:d});
+const cm=n=>`${fmt(n,n%1===0?0:1)} cm`;
+const size=(w,h)=>`${fmt(w,w%1===0?0:1)} × ${fmt(h,h%1===0?0:1)} cm`;
+const euro=n=>`${fmt(n)} €`;
+const roundAreaUp=n=>Math.ceil((n-1e-10)*100)/100;
+const glassType=()=>document.querySelector('input[name="glassType"]:checked').value;
+let backboardType='corrugated',hangerType='wire';
+function syncBubbleGroup(id,value){$(id).querySelectorAll('button[data-value]').forEach(b=>{const active=b.dataset.value===value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});}
+$('glassOptions').addEventListener('change',e=>{if(e.target.name!=='glassType')return;const t=e.target.value;$('glassPrice').value=t==='clear'?35:45;update();});
+['glassEnabled','backboardEnabled','hangerEnabled'].forEach(id=>$(id).addEventListener('change',update));
+$('backboardOptions').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;backboardType=b.dataset.value;syncBubbleGroup('backboardOptions',backboardType);$('backboardPrice').value=backboardType==='corrugated'?11:19;update();});
+$('hangerOptions').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;hangerType=b.dataset.value;syncBubbleGroup('hangerOptions',hangerType);$('hangerQuantityField').classList.toggle('hidden',hangerType!=='foam');$('hangerPrice').value=hangerType==='crocodile'?5:1;update();});
+$('hangerQuantity').addEventListener('blur',()=>{if($('hangerQuantity').value==='' || Number($('hangerQuantity').value)<1)$('hangerQuantity').value=1;update();});
+function setSegment(id,value){$(id).querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.value===value));}
+$('orientation').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;orientation=b.dataset.value;setSegment('orientation',orientation);update()});
+$('frameMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;frameMode=b.dataset.value;setSegment('frameMode',frameMode);$('cornerField').classList.toggle('hidden',frameMode!=='corners');$('frameWidthField').classList.toggle('hidden',frameMode==='corners');update()});
+$('backingOn').addEventListener('change',update);
+$('backingType').addEventListener('change',()=>{$('backingPrice').value=({cardboard:25,foam:40,pvc:45})[$('backingType').value];update();});
+$('backingTypeBubbles').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;$('backingType').value=b.dataset.value;$('backingTypeBubbles').querySelectorAll('button').forEach(x=>{const active=x===b;x.classList.toggle('active',active);x.setAttribute('aria-pressed',String(active));});$('backingPrice').value=({cardboard:25,foam:40,pvc:45})[b.dataset.value];update();});
+
+function update(){
+ const rawW=num('artW'),rawH=num('artH');const dimensionsReady=rawW>0&&rawH>0;const aw=Math.max(0,rawW),ah=Math.max(0,rawH);
+ const backingOn=$('backingOn').checked, backingType=$('backingType').value;
+ const matOn=$('matOn').checked,frameOn=$('frameOn').checked,gType=glassType(),glassOn=$('glassEnabled').checked;
+ $('backingFields').classList.toggle('hidden',!backingOn);
+ $('backingColorField').classList.toggle('hidden',!backingOn||backingType==='cardboard');
+ $('matFields').classList.toggle('hidden',!matOn);$('frameFields').classList.toggle('hidden',!frameOn);
+ $('glassFields').classList.toggle('hidden',!glassOn);
+ $('backboardFields').classList.toggle('hidden',!$('backboardEnabled').checked);
+ $('hangerFields').classList.toggle('hidden',!$('hangerEnabled').checked);
+ const mt=matOn?num('matTop'):0,mb=matOn?num('matBottom'):0,ml=matOn?num('matLeft'):0,mr=matOn?num('matRight'):0;
+ const innerW=aw+ml+mr,innerH=ah+mt+mb;
+ const enteredFrameWidth=frameOn?num('frameWidth'):0;
+ const cornerAdd=frameOn&&frameMode==='corners'?num('cornerAdd'):0;
+ const fw=frameOn?(frameMode==='corners'?cornerAdd*100/8:enteredFrameWidth):0;
+ const outerW=innerW+2*fw,outerH=innerH+2*fw;
+ const perimeterCm=2*(innerW+innerH)+(frameOn?(frameMode==='width'?8*enteredFrameWidth:cornerAdd*100):0);
+ const lengthM=frameOn&&dimensionsReady?perimeterCm/100:0;
+ const stickLen=num('stickLength');
+ const sticks=frameOn&&stickLen>0?Math.ceil(lengthM/stickLen):0;
+ const matArea=matOn&&dimensionsReady?roundAreaUp(innerW*innerH/10000):0;
+ const glassArea=glassOn&&dimensionsReady?roundAreaUp(innerW*innerH/10000):0;
+ const matCost=matArea*num('matPrice');
+ const backingArea=backingOn&&dimensionsReady?roundAreaUp(innerW*innerH/10000):0;
+ const backingCost=backingArea*num('backingPrice');
+ const backingColor=backingType==='cardboard'?'':document.querySelector('input[name="backingColor"]:checked').value;
+ const backingTypeLabel=backingType==='cardboard'?'Kartonas':backingType==='foam'?'Klijinga puta':'PVC';
+ const backingLabel=backingOn?`${backingTypeLabel}${backingColor?` (${backingColor==='black'?'juoda':'balta'})`:''}`:'Išjungtas';
+ const frameCost=lengthM*num('framePrice');
+ const glassCost=glassArea*num('glassPrice');
+ const backboardOn=$('backboardEnabled').checked;
+ const backboardArea=backboardOn&&dimensionsReady?roundAreaUp(innerW*innerH/10000):0;
+ const backboardPrice=num('backboardPrice');
+ const backboardCost=backboardArea*backboardPrice;
+ const hangerOn=$('hangerEnabled').checked;
+ const hangerQuantity=hangerType==='foam'?Math.max(1,Math.floor(Number($('hangerQuantity').value)||1)):1;
+ const hangerPrice=num('hangerPrice');
+ const hangerCost=hangerOn?hangerPrice*hangerQuantity:0;
+ const total=matCost+backingCost+frameCost+glassCost+backboardCost+hangerCost;
+ $('rArt').textContent=dimensionsReady?size(aw,ah):'—';$('rInner').textContent=dimensionsReady?size(innerW,innerH):'—';$('rOuter').textContent=dimensionsReady?(frameOn?size(outerW,outerH):size(innerW,innerH)):'—';$('rLengthRow').classList.toggle('hidden',!frameOn);$('rSticksRow').classList.toggle('hidden',!frameOn);
+ $('rLength').textContent=frameOn?`${fmt(lengthM)} m`:'Netaikoma';$('rSticks').textContent=frameOn?`${sticks} vnt.`:'0 vnt.';
+ $('backingCostRow').classList.toggle('hidden',!backingOn);$('matCostRow').classList.toggle('hidden',!matOn);$('frameCostRow').classList.toggle('hidden',!frameOn);$('glassCostRow').classList.toggle('hidden',!glassOn);
+ $('backboardCostRow').classList.toggle('hidden',!backboardOn);$('hangerCostRow').classList.toggle('hidden',!hangerOn);
+ $('rBackingCost').textContent=`${euro(backingCost)} (${backingLabel})`;
+ $('rMatCost').textContent=euro(matCost);$('rFrameCost').textContent=euro(frameCost);
+ $('glassLabel').textContent=`Stiklas (${gType==='clear'?'skaidrus':'matinis'})`;
+ $('rGlassCost').textContent=euro(glassCost);
+ $('backboardLabel').textContent=`Nugarėlė (${backboardType==='corrugated'?'gofruotas kartonas':'kietas kartonas'})`;
+ $('rBackboardCost').textContent=euro(backboardCost);
+ const hangerNames={wire:'Troselis',crocodile:'Krokodilai',foam:'Putu pagrindo pakabinimas'};
+ $('hangerLabel').textContent=`Pakabinimas (${hangerNames[hangerType]})${hangerType==='foam'?` × ${hangerQuantity} vnt.`:''}`;
+ $('rHangerCost').textContent=euro(hangerCost);$('rTotal').textContent=euro(total);
+ $('summaryArt').textContent=dimensionsReady?size(aw,ah):'—';$('summaryInner').textContent=dimensionsReady?size(innerW,innerH):'—';$('summaryOuter').textContent=dimensionsReady?(frameOn?size(outerW,outerH):size(innerW,innerH)):'—';
+ $('previewCaption').textContent=dimensionsReady?`Darbas ${orientation==='portrait'?'vertikalus':'horizontalus'} • peržiūra scheminė, ne tikslaus mastelio`:'Įveskite darbo matmenis, kad būtų apskaičiuota kaina';
+ let w=dimensionsReady?aw:1,h=dimensionsReady?ah:1;if(orientation==='landscape'&&w<h){[w,h]=[h,w]}if(orientation==='portrait'&&w>h){[w,h]=[h,w]}
+ const matVisual=$('matVisual'),frameVisual=$('frameVisual'),artVisual=$('artVisual');
+ frameVisual.classList.toggle('no-frame',!frameOn);
+ matVisual.style.background=matOn?'#d9dcdf':'transparent';
+ artVisual.classList.toggle('glass-on',glassOn);
+ artVisual.classList.toggle('glass-matte',glassOn&&gType==='matte');
+ // Fit the complete assembly, not just the artwork: print + four mat margins + frame.
+ const preview=$('previewWrap');
+ const previewStyle=getComputedStyle(preview);
+ const availableW=Math.max(120,preview.clientWidth-parseFloat(previewStyle.paddingLeft)-parseFloat(previewStyle.paddingRight)-28);
+ const availableH=Math.max(160,preview.clientHeight-parseFloat(previewStyle.paddingTop)-parseFloat(previewStyle.paddingBottom)-28);
+ const visualW=dimensionsReady?w:40,visualH=dimensionsReady?h:60;
+ const vmt=matOn?mt:0,vmb=matOn?mb:0,vml=matOn?ml:0,vmr=matOn?mr:0;
+ const frameCm=frameOn?Math.max(0,fw):0;
+ const totalW=visualW+vml+vmr+2*frameCm;
+ const totalH=visualH+vmt+vmb+2*frameCm;
+ // Vienodas mastelis abiem ašimis: proporcijos niekada neištempiamos ir niekas nenukerpama.
+ const scale=Math.min(6.2,availableW/Math.max(1,totalW),availableH/Math.max(1,totalH));
+ const vw=visualW*scale,vh=visualH*scale;
+ const framePx=frameOn?Math.max(3,frameCm*scale):0;
+ artVisual.style.width=`${vw}px`;artVisual.style.height=`${vh}px`;artVisual.style.aspectRatio=`${visualW}/${visualH}`;
+ frameVisual.style.padding=`${framePx}px`;
+ matVisual.style.paddingTop=`${vmt*scale}px`;
+ matVisual.style.paddingBottom=`${vmb*scale}px`;
+ matVisual.style.paddingLeft=`${vml*scale}px`;
+ matVisual.style.paddingRight=`${vmr*scale}px`;
+ frameVisual.style.width=`${totalW*scale}px`;frameVisual.style.height=`${totalH*scale}px`;frameVisual.style.maxWidth='100%';frameVisual.style.maxHeight='100%';frameVisual.style.flex='0 0 auto';
+ const detailRows=[];
+ if(dimensionsReady) detailRows.push(`<div><span>Darbo matmenys</span><b>${size(aw,ah)}</b></div>`);
+ if(backingOn) detailRows.push(`<div><span>${backingLabel}</span><b>${fmt(backingArea,2)} m² × ${euro(num('backingPrice'))} = ${euro(backingCost)}</b></div>`);
+ if(matOn) detailRows.push(`<div><span>Pasportas (${size(innerW,innerH)})</span><b>${fmt(matArea,2)} m² × ${euro(num('matPrice'))} = ${euro(matCost)}</b></div>`);
+ if(frameOn) detailRows.push(`<div><span>Bagetas${frameMode==='width'?` (plotis ${fmt(enteredFrameWidth)} cm)`:''}</span><b>${fmt(lengthM)} m × ${euro(num('framePrice'))} = ${euro(frameCost)}</b></div><div><span>Reikalingos lazdos</span><b>${sticks} vnt. po ${fmt(stickLen)} m</b></div>`);
+ if(glassOn) detailRows.push(`<div><span>Stiklas (${gType==='clear'?'skaidrus':'matinis'})</span><b>${fmt(glassArea,2)} m² × ${euro(num('glassPrice'))} = ${euro(glassCost)}</b></div>`);
+ if(backboardOn) detailRows.push(`<div><span>Nugarėlė (${backboardType==='corrugated'?'gofruotas kartonas':'kietas kartonas'})</span><b>${fmt(backboardArea,2)} m² × ${euro(backboardPrice)} = ${euro(backboardCost)}</b></div>`);
+ if(hangerOn) detailRows.push(`<div><span>Pakabinimas (${hangerNames[hangerType]}) × ${hangerQuantity} vnt.</span><b>${hangerQuantity} × ${euro(hangerPrice)} = ${euro(hangerCost)}</b></div>`);
+ $('details').innerHTML=detailRows.length>1?detailRows.join(''):'<div><span>Nėra įjungtų medžiagų</span><b>0,00 €</b></div>';
+}
+// Skaitiniai laukai: priimami tik skaitmenys, kablelis automatiškai keičiamas tašku.
+document.querySelectorAll('input[type="number"]').forEach(el=>{
+  if(el.id==='hangerQuantity') return;
+  el.type='text';
+  el.inputMode=el.id==='hangerQuantity'?'numeric':'decimal';
+  el.autocomplete='off';
+  el.spellcheck=false;
+});
+function cleanNumericInput(el){
+  const integerOnly=el.id==='hangerQuantity';
+  let value=el.value.replace(/,/g,'.').replace(/[^0-9.]/g,'');
+  const dot=value.indexOf('.');
+  if(integerOnly) value=value.replace(/\./g,'');
+  else if(dot!==-1) value=value.slice(0,dot+1)+value.slice(dot+1).replace(/\./g,'').slice(0,2);
+  if(el.value!==value) el.value=value;
+}
+document.querySelectorAll('input').forEach(el=>{
+  if(el.type==='text'){
+    el.addEventListener('input',()=>{
+      cleanNumericInput(el);
+      update();
+    });
+  } else {
+    el.addEventListener('input',update);
+  }
+});
+$('reset').addEventListener('click',()=>{
+ $('artW').value='';$('artH').value='';
+ $('matOn').checked=false;$('matTop').value=4;$('matBottom').value=2;$('matLeft').value=4;$('matRight').value=4;$('matPrice').value=15;
+ $('backingOn').checked=false;$('backingType').value='cardboard';
+ $('backingTypeBubbles').querySelectorAll('button').forEach(b=>{const active=b.dataset.value==='cardboard';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+ document.querySelector('input[name="backingColor"][value="black"]').checked=true;$('backingPrice').value=10;
+ $('frameOn').checked=false;$('frameWidth').value=2;$('cornerAdd').value=.16;$('framePrice').value=25;$('stickLength').value=3;
+ $('glassEnabled').checked=false;document.querySelector('input[name="glassType"][value="clear"]').checked=true;$('glassPrice').value=35;
+ $('backboardEnabled').checked=false;backboardType='corrugated';syncBubbleGroup('backboardOptions',backboardType);$('backboardPrice').value=11;
+ $('hangerEnabled').checked=false;hangerType='wire';syncBubbleGroup('hangerOptions',hangerType);$('hangerQuantityField').classList.add('hidden');$('hangerPrice').value=1;$('hangerQuantity').value=1;
+ orientation='portrait';frameMode='corners';$('frameVisual').classList.add('style-black');
+ setSegment('orientation',orientation);setSegment('frameMode',frameMode);$('cornerField').classList.remove('hidden');$('frameWidthField').classList.add('hidden');$('backingPrice').value=25;$('matPrice').value=45;update();$('artW').focus();
+});
+$('cornerField').classList.remove('hidden');$('frameWidthField').classList.add('hidden');
+
+$('printSchema').addEventListener('click',()=>{
+ const ready=$('artW').value.trim()!==''&&$('artH').value.trim()!==''&&num('artW')>0&&num('artH')>0;
+ if(!ready){alert('Pirmiausia įveskite darbo plotį ir ilgį.');$('artW').focus();return;}
+ const clone=$('frameVisual').cloneNode(true);
+ clone.removeAttribute('id');
+ $('printVisual').replaceChildren(clone);
+ $('printArt').textContent=$('rArt').textContent;
+ $('printInner').textContent=$('rInner').textContent;
+ $('printOuter').textContent=$('rOuter').textContent;
+ const customerDetails=$('details').cloneNode(true);
+ customerDetails.querySelectorAll('div').forEach(row=>{
+   const label=row.querySelector('span')?.textContent||'';
+   if(label.includes('Reikalingos lazdos'))row.remove();
+ });
+ $('printDetails').innerHTML=customerDetails.innerHTML;
+ $('printTotal').textContent=$('rTotal').textContent;
+ $('printDate').textContent=new Date().toLocaleDateString('lt-LT');
+ window.print();
+});
+
+update();
+let previewResizeTimer;
+window.addEventListener('resize',()=>{clearTimeout(previewResizeTimer);previewResizeTimer=setTimeout(update,80);},{passive:true});
+if('ResizeObserver' in window){const previewObserver=new ResizeObserver(()=>update());previewObserver.observe($('previewWrap'));}
+</script>
+</body>
+</html>
